@@ -3,30 +3,40 @@
 # dla 2315 będą to 21, 35, 231, 315.
 
 
-
-def combinations_of_7():
-
-    number = 2315 # przekonwertuje sobie ja na binarną wersję
-    count = 0
-    for i in range(2**len(str(number))+1): # 2^n kombinacji
-        number_copy = number
-        actual_number = 0
-        for _ in range(len(str(number))+1):
-            actual_number = actual_number*10 + (number_copy % 10) * (i % 2)
-            number_copy //= 10
-            i // 2
-        if actual_number % 7 == 0:
-            count +=1
-    print(count)
-
     # na podstawie WDI i dyskretnej:
-    # wiem że każdą liczbę pojedyńczą (1-9) mogę zapisać na 4 bitach 0000 - 1001
+    # wiem że każdą liczbę pojedyńczą (1-9) mogę zapisać na 4 bitach 0000 - 1001 // ale tutaj tego nie uzyję
+
+
     # ilość zbiorów utworzonych z liczny jest równy 2^n, gdzie n jest równa len(number)
+    # dlatego zrobiłem maski bitowe, nie ogarniam doładnie ich ale na oko wyszło
 
-    # TODO:
+def zad5():
+    number = 2315
+    tmp_number = number
 
-    # zrobię pętlę wykonującą się 2^n razy, żeby zrobić wszystkie możliwe kombinacje liczb
+    #długość liczby
+    number_length = 0
+    while tmp_number > 0:
+        tmp_number //= 10
+        number_length += 1
 
+    for bit_mask in range(1, 2**number_length): # bo nie będę sprawdzał liczby równej 0000
+        bit_mask_tmp = bit_mask
+        tmp_number = number
+        created_number = 0
+        up_to = 0
+        for _ in range(number_length):
+            if bit_mask_tmp %2 == 1:
+                created_number = 10**up_to *(tmp_number % 10) + created_number # bo normalnie bym wypisał w odwrotnym ułożeniu liczby, dlatego tutaj co wejscie w warunek dodaje cyfrę z lewej strony
+                up_to += 1 
+            tmp_number //= 10
+            bit_mask_tmp //= 2
 
-    # druga pętla która która obskakuje po len(number)
+        if created_number % 7 == 0:
+                print(created_number)
     
+
+
+
+
+print(zad5())
