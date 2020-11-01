@@ -16,5 +16,30 @@ def prime_number_list(n):
                       
     return prime_list
 
-print(prime_number_list(200))
+# print(prime_number_list(200))
 
+
+
+
+
+
+# FROM College
+
+from math import sqrt, ceil
+
+# n = int(input('> '))
+
+def erastotenes(n=25):
+    erastotenes_list =[True for _ in range(n+1)]
+    erastotenes_list[0] = erastotenes_list[1] = False
+
+    for i in range(2, ceil(int(sqrt(n))) + 1):
+        if erastotenes_list[i]:
+            for a in range(i*i,n+1, i):
+                erastotenes_list[a] = False
+
+    for i in range(n+1):
+        if erastotenes_list[i]:
+            print(i)
+
+erastotenes()

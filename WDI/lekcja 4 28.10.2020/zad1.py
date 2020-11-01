@@ -2,7 +2,7 @@
 
 # oblece sobie funkcję i będę robił: liczba mod 2^16 
 
-number_to_convert = 43520994032590
+number_to_convert = 435209
 
 
 def convert_oct(number):
@@ -17,3 +17,27 @@ def convert_oct(number):
     return number_oct
 
 print(convert_oct(number_to_convert))
+
+
+
+
+# FROM College
+
+import math
+
+def convert(number, base):
+    hex = '0123456789ABCDEF'
+    list_of_vals = [0 for el in range(math.ceil(math.log(number, base))) +1] # declaration pokaże nam długość cyfry
+    i = 0   # spoko tip z log(liczba, podstawa)
+
+    while number > 0:
+        list_of_vals[i] = number % base
+        number //= base
+        i += 1 
+
+    for j in list_of_vals[::-1]: # bo jest odwrócone
+        print(hex[j], end ='')
+
+
+
+convert(255432235,16)
