@@ -34,7 +34,7 @@ def Hetman_problem(chess_table):
     cord_of_hetman = []
     for i in range(length):
         for j in range(length): # za pomocą i i j szukam wolnego miejsca na tablicy wymiarowej
-            if i == 0 and j == 1:
+            if chess_table[i][j] == 0:
                 chess_table[i][j] = True
                 cord_of_hetman.append((i,j))
                 # poziom
@@ -43,26 +43,27 @@ def Hetman_problem(chess_table):
                 for forward_of_i in range(i+1,length,1):
                     chess_table[forward_of_i][j] = -1
                 #pion
-                for back_of_j in range(i-1,0-1,-1):
+                for back_of_j in range(j-1,0-1,-1):
                     chess_table[i][back_of_j] = -1
-                for forward_of_j in range(i+1,length,1):
+                for forward_of_j in range(j+1,length,1):
                     chess_table[i][forward_of_j] = -1
                 #ukos w prawy dół
                 for horizontal, vertical in zip(range(i+1,length,1), range(j+1,length,1)):
                     chess_table[horizontal][vertical] = -1
-                # # #ukos w lewą górę
+                # # # #ukos w lewą górę
                 for horizontal, vertical in zip(range(i-1,0-1,-1), range(j-1,0-1,-1)):
-                    print(horizontal, vertical)
                     chess_table[horizontal][vertical] = -1
-                # #ukos prawą w górę
+                # # #ukos prawą w górę
                 for horizontal, vertical in zip(range(i-1,0-1,-1), range(j+1,length,1)):
                     chess_table[horizontal][vertical] = -1
-                # # #ukos w lewy dół
+                # # # #ukos w lewy dół
                 for horizontal, vertical in zip(range(i+1,length,1), range(j-1,0-1,-1)):
                     chess_table[horizontal][vertical] = -1
-
-                for _ in  chess_table:
-                        print(_)
+    print(len(cord_of_hetman))
+    # print(cord_of_hetman)
+    
+    for single_row in  chess_table:
+        print(single_row)
                 
 
     
