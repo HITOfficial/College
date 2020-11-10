@@ -20,6 +20,11 @@
 # zagrażał hetmanowi z sąsiedniego wiersza. Dodatkowo, suma wartości pól zajmowanych przez wszystkie figury była
 # równa zero. 
 
+
+
+
+# ZADANIE 3 ZROBIONE DOKŁADNIE PRZY UŻYCIU DWÓCH REKURENCJI
+
 from random import randint
 
 # Hetman = 1
@@ -29,7 +34,111 @@ def create_chess_table():
     chess_table = [[0 for _ in range(8)] for _ in range(8)]
     return chess_table
 
-def hetman_problem1(chess_table):
+def create_random_number_list():
+    random_number_list = [[randint(-5,6) for _ in range(8)] for _ in range(8)]
+    return random_number_list
+
+def sum_of_values(list_of_index, list_to_take_data):
+    sum_of_elements = 0
+    for row, col in list_of_index:
+        sum_of_elements += list_to_take_data[row][col]
+    
+    return sum_of_elements
+
+
+def change_table(i,j, length, chess_table):
+    chess_table[i][j] = True
+    # poziom
+    for back_of_i in range(i-1,0-1,-1):
+        chess_table[back_of_i][j] = -1
+    for forward_of_i in range(i+1,length,1):
+        chess_table[forward_of_i][j] = -1
+    #pion
+    for back_of_j in range(j-1,0-1,-1):
+        chess_table[i][back_of_j] = -1
+    for forward_of_j in range(j+1,length,1):
+        chess_table[i][forward_of_j] = -1
+    #ukos w prawy dół
+    for horizontal, vertical in zip(range(i+1,length,1), range(j+1,length,1)):
+        chess_table[horizontal][vertical] = -1
+    # # # #ukos w lewą górę
+    for horizontal, vertical in zip(range(i-1,0-1,-1), range(j-1,0-1,-1)):
+        chess_table[horizontal][vertical] = -1
+    # # #ukos prawą w górę
+    for horizontal, vertical in zip(range(i-1,0-1,-1), range(j+1,length,1)):
+        chess_table[horizontal][vertical] = -1
+    # # # #ukos w lewy dół
+    for horizontal, vertical in zip(range(i+1,length,1), range(j-1,0-1,-1)):
+        chess_table[horizontal][vertical] = -1
+
+    return chess_table # ma mi pomodyfikować i zwrócić tą tablicę
+
+
+def find_hetman(length, hetman_cord, begin_i, begin_j):
+    # print(f'rozpoczęto! {begin_i, begin_j}')
+
+    chess_table = create_chess_table() # za każdym razem tworzę pustą szachownicę 
+    for i,j in hetman_cord: # uzupełniam szachownicę ustawionymi hetmanami, oraz ustawiam punkty skucia przez nich 
+        chess_table = change_table(i,j, length, chess_table)
+    
+    for i in range(begin_i, length):
+        hetman_in_row = False # za pomocą tego warunku będę sprawdzał, czy znalazłem w danym rzędzie nowego hetmana
+        for j in range(begin_j, length):
+            if chess_table[i][j] == 0:
+                # print(f'tutaj wstawiam  {i, j}')
+                chess_table[i][j] = True # jeśli znajdzię puste miejsce na hetmana, to sobie już je nadpisuje
+                hetman_cord.append((i,j)) # wrzucamy nowego hetmana do znalezionych
+                chess_table = change_table(i,j, length, chess_table) # oraz modyfikujemy naszą szachownicę
+                hetman_in_row = True # zaznaczamy, że znaleźliśmy nowego hetmana!
+
+        if not hetman_in_row: # jeśli nie znajdziemy nowego hetmana w rzędzie to usuwamy ostatniego i tworzymy rekurencje 
+            begin_i, begin_j = hetman_cord.pop() # algorytm polega na tym, że się usuwamy ostatniego hetmana, pobieramy jego kordy
+            # print(f' tego usuwam {begin_i, begin_j}')
+            find_hetman(length, hetman_cord, begin_i , begin_j+1) # i w następnej rekurencji, cofamy się o 1 rząd i zaczynamy przeszukiwanie od następnej kolumny, a się jebałem z tym że wiersz dodatkowo cofałem jeszcze raz 
+            break # tej już nie będę potrzebował
+        begin_j = 0 # potrzebowałem do jednej iteracji znalezienia kolumny wiekszej, takto lecę normalnie, jeśli za pierwszym razem znalazło wolne miejsce na hetmana       
+    
+    return hetman_cord
+
+
+# potrzebowałem sobie zrobić dodatkową funkcję specjalnie na rekurencje do niej samej żeby nie resetować wartości z tablicy którą będę sumował
+def hetman_problem_sum_of_cords(length, list_of_data, hetman_cord=[], begin_i=0, begin_j=0): # w hetman_cord będę trzymał kordy jako tuple ustawionych już hetmanów 
+    hetman_cord = list(find_hetman(length, hetman_cord, begin_i , begin_j)) # ustawiłem i, j jako warto w parametrach bo do rekurencji będę potrzebował ich aby poprawnie działała
+    if not sum_of_values(hetman_cord, list_of_data): # jeśli suma będzie równa 0 to zakończony wkońcu algorytm
+        print(f'Znaleziono zgodnego ułożenia do sumy 0 dla hetmanów:{hetman_cord}')
+    elif hetman_cord[0][0] == 0 and hetman_cord[0][1] == length-1: # jeśli dojdę do ostatniej kolumny pierwszego wiersza: wtedy już nie znajdę kolejnego ułożenia hetmanów
+        return print('Nie znaleziono zgodnego ułożenia do sumy 0')
+    else:
+        hetman_problem_sum_of_cords(length, list_of_data, [(hetman_cord[0][0], hetman_cord[0][1]+1)], 1, 0) # <- ten dziwoląg to utworzyłem nowego hetman_corda ze starego biorąc wartości z pierwszego ułożonego hetmana, z kolumną powiększoną o 1, i chyba tak musiałem zrobić, bo tuple jest nie mutowalny
+                                                                                                      #tutaj przeskakuję już od razu do drugiego wiersza, i od niego zaczynam szukanie nowego hetmana
+
+def hetman_problem():
+    length = 8 
+    list_of_data = create_random_number_list() # z niej będę wyciągał elementy
+    hetman_problem_sum_of_cords(8, list_of_data)
+    # muszę obskoczyć wstawianie hetmanów rekurencyjnie
+    
+    # gdy znajdę tych ośmiu hetmanów, muszę oblecieć i posprawdzać czy suma wartości z tablicy pod ich kordami wynosi 0 
+    # if not sum_of_values(hetman_cord, list_of_data): 
+    #     # jeśli nie będzie równa 0 , to będę szukał nowego ustawienia hetmanów, a pierwszym w tym ustawieniu będzie pierwszy ze starego ustawienia z inkrementowaną kolumną o 1
+    #     hetman_cord = [0]
+    #     hetman_cord = list(find_hetman(length, hetman_cord[0], hetman_cord[0][0] ,hetman_cord[0][1]+1))# <- dwa ostatnie parametry to wartości wiersza, i kolumny z pierwszego hetmana
+
+hetman_problem()
+    
+
+
+
+
+
+
+
+
+
+
+
+# SEARCH FOR FIRST's Hetmans in chess table without recursion <-- MY FIRST IDEA
+def hetman_problem1(chess_table, cord_of_hetman):
     length = len(chess_table)
     cord_of_hetman = []
     for i in range(length):
@@ -65,81 +174,5 @@ def hetman_problem1(chess_table):
     for single_row in  chess_table:
         print(single_row)
                 
-# hetman_problem1(create_chess_table())
+# hetman_problem1(create_chess_table(),[])
 
-
-
-
-
-
-
-
-def change_table(i,j, length, chess_table):
-    chess_table[i][j] = True
-    # poziom
-    for back_of_i in range(i-1,0-1,-1):
-        chess_table[back_of_i][j] = -1
-    for forward_of_i in range(i+1,length,1):
-        chess_table[forward_of_i][j] = -1
-    #pion
-    for back_of_j in range(j-1,0-1,-1):
-        chess_table[i][back_of_j] = -1
-    for forward_of_j in range(j+1,length,1):
-        chess_table[i][forward_of_j] = -1
-    #ukos w prawy dół
-    for horizontal, vertical in zip(range(i+1,length,1), range(j+1,length,1)):
-        chess_table[horizontal][vertical] = -1
-    # # # #ukos w lewą górę
-    for horizontal, vertical in zip(range(i-1,0-1,-1), range(j-1,0-1,-1)):
-        chess_table[horizontal][vertical] = -1
-    # # #ukos prawą w górę
-    for horizontal, vertical in zip(range(i-1,0-1,-1), range(j+1,length,1)):
-        chess_table[horizontal][vertical] = -1
-    # # # #ukos w lewy dół
-    for horizontal, vertical in zip(range(i+1,length,1), range(j-1,0-1,-1)):
-        chess_table[horizontal][vertical] = -1
-
-    return chess_table # ma mi pomodyfikować i zwrócić tą tablicę
-
-
-def find_hetman(length, hetman_cord, begin_i, begin_j):
-    print(f'rozpoczęto! {begin_i, begin_j}')
-
-    chess_table = create_chess_table() # za każdym razem tworzę pustą szachownicę 
-    for i,j in hetman_cord: # uzupełniam szachownicę ustawionymi hetmanami, oraz ustawiam punkty skucia przez nich 
-        chess_table = change_table(i,j, length, chess_table)
-    
-    for i in range(begin_i, length):
-        hetman_in_row = False # za pomocą tego warunku będę sprawdzał, czy znalazłem w danym rzędzie nowego hetmana
-        for j in range(begin_j, length):
-            if chess_table[i][j] == 0:
-                print(f'tutaj wstawiam  {i, j}')
-                chess_table[i][j] = True # jeśli znajdzię puste miejsce na hetmana, to sobie już je nadpisuje
-                hetman_cord.append((i,j)) # wrzucamy nowego hetmana do znalezionych
-                chess_table = change_table(i,j, length, chess_table) # oraz modyfikujemy naszą szachownicę
-                hetman_in_row = True # zaznaczamy, że znaleźliśmy nowego hetmana!
-
-        if not hetman_in_row: # jeśli nie znajdziemy nowego hetmana w rzędzie to usuwamy ostatniego i tworzymy rekurencje 
-            begin_i, begin_j = hetman_cord.pop() # algorytm polega na tym, że się usuwamy ostatniego hetmana, pobieramy jego kordy
-            print(f' tego usuwam {begin_i, begin_j}')
-            find_hetman(length, hetman_cord, begin_i , begin_j+1) # i w następnej rekurencji, cofamy się o 1 rząd i zaczynamy przeszukiwanie od następnej kolumny XD a się jebałem z tym że wiersz dodatkowo cofałem jeszcze raz 
-            break # tej już nie będę potrzebował
-        begin_j = 0 # potrzebowałem do jednej iteracji znalezienia kolumny wiekszej, takto lecę normalnie, jeśli za pierwszym razem znalazło wolne miejsce na hetmana       
-    
-    # for el in chess_table:
-    #     print(el)
-    return hetman_cord
-
-
-
-
-def hetman_problem():
-    length = 8 
-    hetman_cord = [] # bedę ustawiał w niej tuple cordów nowych hetmanów
-
-    # muszę obskoczyć wstawianie hetmanów rekurencyjnie
-
-    hetman_cord = list(find_hetman(length, hetman_cord,0 ,0))
-    print(hetman_cord)
-hetman_problem()
-    
