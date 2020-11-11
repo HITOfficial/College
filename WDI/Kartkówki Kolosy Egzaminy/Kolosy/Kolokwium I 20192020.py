@@ -1,3 +1,6 @@
+from copy import deepcopy
+from random import randint
+
 # Zad. 1. Dane są dwie tablice int t1[N], int t2[N] wypełnione liczbami naturalnymi. Proszę napisać funkcję, która
 # sprawdza czy z każdej z tablic można wyciąć po jednym kawałku, tak aby suma elementów w obu kawałkach była:
 # co najmniej drugą potęgą dowolnej liczby naturalnej. Łączna długości obu kawałków powinna wynosić 24.
@@ -15,15 +18,76 @@
 # można usunąć jeden wiersz i dwie kolumny, tak aby każdy z pozostałych elementów tablicy był wielokrotnością
 # (co najmniej dwukrotnością) kwadratu dowolnej liczby naturalne większej od 1.
 
+
+# CHYBA DZIAŁA POPRAWNIE 
+import copy # potrzebuję robić głębokie kopie bo, bo w listach zawieram kolejne listy, a więc mam obiekty mutable
+
+def create_random_n_list(n=10): # do celów sprawdzenia utworzyłem generator list
+    n_list = [[randint(10, 70) for _ in range(n)] for _ in range(n)]
+    return n_list
+    
+
+def pows_of_number(n): 
+    for i in range(1,1000): # sprawdzam od n żeby zaoszczędzic trochę liczenia do 1000
+        for power in range(2,11): # sprawdza od 2 do 10 potęgi żeby nie mulić programu
+            if i ** power > n:
+                break
+            elif i ** power == n:
+                return True # jesli znajdzie taką potęge to kończy działanie
+
+    return False # inaczej nie znalazło takiej potęgi
+
+
+def count_finded_pows(list_to_search):
+    count_all_elements = 0
+    count_pows = 0
+
+    for i in range(len(list_to_search)):
+        for j in range(len(list_to_search[i])): # liczę czy dla każdej liczby z listy znalazło potęgę 
+            count_all_elements += 1
+            if pows_of_number(list_to_search[i][j]):
+                count_pows += 1 
+
+    if count_all_elements == count_pows:
+        return True
+        
+    return False
+
+
+# usunąć jeden wiersz i 2 kolumny
+def able_to_remove(n_list):
+
+    for i in range(len(n_list)):
+        list_copy = copy.deepcopy(n_list) # dopiero deepcopy działa bez referencji
+        del list_copy[i] # najpierw usuwam wiersz
+        
+        for col1 in range(len(list_copy)): # pierwszą kolumnę do wycięcia wybieram na n-1 sposobów 
+            list_copy_col1 = copy.deepcopy(list_copy)
+            for row in range(len(list_copy)):
+                del list_copy_col1[row][col1] # tak usuwam pierwszą z kolumn
+
+            for col2 in range(col1,len(list_copy_col1)): # żeby nie sprawdzać po dwa razy tych samych kolumn to: zaczynam szukanie drugiej do  od indexu pierwszej co usunąłem 01 02, 03 -> 12 13 -> 23 
+                list_copy_col2 = copy.deepcopy(list_copy_col1) # robię kopię z usuniętą pierwszą kolumną
+                for row in range(len(list_copy_col1)):
+                    del list_copy_col2[row][col2]
+                # for el in list_copy_col2:
+                #     print(el)
+                # teraz mam kandytatów w liście, żeby sprawdzić, czy spełniają warunki zadania
+                if count_finded_pows(list_copy_col2): # to jest ta lista z powykreślanymi 2 kolumnami i jednym wierszem
+                    return print(True) # jeśli znajdzie potęgę liczby dla każdego elementu z list to kończymy szukanie 
+
+
+    return print(False) # jeśli przeleci po wszystkich
+                
+              
+able_to_remove(create_random_n_list(4))
+
+
+
 # Zad. 3. Dana jest tablica t[N][N] wypełniona liczbami całkowitymi. Tablica reprezentuje szachownicę. Proszę napisać
 # funkcję, która sprawdza czy da się umieścić w każdym wierszu jednego hetmana szachowego aby żaden hetman nie
 # zagrażał hetmanowi z sąsiedniego wiersza. Dodatkowo, suma wartości pól zajmowanych przez wszystkie figury była
 # równa zero. 
-
-
-
-
-# ZADANIE 3 ZROBIONE DOKŁADNIE PRZY UŻYCIU DWÓCH REKURENCJI
 
 from random import randint
 
@@ -115,7 +179,7 @@ def hetman_problem_sum_of_cords(length, list_of_data, hetman_cord=[], begin_i=0,
 def hetman_problem():
     length = 8 
     list_of_data = create_random_number_list() # z niej będę wyciągał elementy
-    hetman_problem_sum_of_cords(8, list_of_data)
+    hetman_problem_sum_of_cords(length, list_of_data)
     # muszę obskoczyć wstawianie hetmanów rekurencyjnie
     
     # gdy znajdę tych ośmiu hetmanów, muszę oblecieć i posprawdzać czy suma wartości z tablicy pod ich kordami wynosi 0 
