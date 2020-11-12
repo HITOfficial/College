@@ -1,5 +1,9 @@
 from copy import deepcopy
 from random import randint
+# 
+def create_random_n_list(n=10): 
+    n_list = [[randint(10, 70) for _ in range(n)] for _ in range(n)]
+    return n_list
 
 # Zad. 1. Dane są dwie tablice int t1[N], int t2[N] wypełnione liczbami naturalnymi. Proszę napisać funkcję, która
 # sprawdza czy z każdej z tablic można wyciąć po jednym kawałku, tak aby suma elementów w obu kawałkach była:
@@ -14,17 +18,40 @@ from random import randint
 # Zad. 1. Dane są dwie tablice int t1[N], int t2[N] wypełnione liczbami naturalnymi. Proszę napisać funkcję, która
 # sprawdza czy z każdej z tablic można wyciąć po jednym kawałku, tak aby suma elementów w obu kawałkach była:
 # iloczynem dokładnie dwóch liczb pierwszych. Oba kawałki powinny być jednakowej długości.
+
+
+
+# Zrobiłem filtrowanie liczb pierwszych sitem Erastotenesa
+def sieve_Erastotenes(list_to_filtr):
+    filtr_to = len(list_to_filtr)
+    for n in [2,3,5,7]:
+        i = 2
+        while n*i <= filtr_to: # lecę do ostatniego elementu
+            if n*i in list_to_filtr:
+                list_to_filtr[list_to_filtr.index(n*i)] = False
+            i+=1
+    list_to_filtr = list(filter(lambda odd: odd, list_to_filtr)) # Filtruje tylko nieparzyste
+
+    return list_to_filtr    
+
+def odd_numbers_to_n(n= 100):
+    odd_numbers = sorted([number for number in range(1,n)])
+    return sieve_Erastotenes(odd_numbers)
+
+# wstępnie zrobię to na masce bitowej będę zapisywał wybrane elementy
+
+
+print(odd_numbers_to_n())
+
 # Zad. 2. Dana jest tablica int t[N][N] zawierająca liczby naturalne. Proszę napisać funkcję, która sprawdza czy z tablicy
 # można usunąć jeden wiersz i dwie kolumny, tak aby każdy z pozostałych elementów tablicy był wielokrotnością
 # (co najmniej dwukrotnością) kwadratu dowolnej liczby naturalne większej od 1.
 
 
 # CHYBA DZIAŁA POPRAWNIE 
-import copy # potrzebuję robić głębokie kopie bo, bo w listach zawieram kolejne listy, a więc mam obiekty mutable
+import copy # potrzebuję robić głębokie kopie bo, bo w listach zawieram kolejne listy
 
-def create_random_n_list(n=10): # do celów sprawdzenia utworzyłem generator list
-    n_list = [[randint(10, 70) for _ in range(n)] for _ in range(n)]
-    return n_list
+
     
 
 def pows_of_number(n): 
@@ -61,7 +88,7 @@ def able_to_remove(n_list):
         list_copy = copy.deepcopy(n_list) # dopiero deepcopy działa bez referencji
         del list_copy[i] # najpierw usuwam wiersz
         
-        for col1 in range(len(list_copy)): # pierwszą kolumnę do wycięcia wybieram na n-1 sposobów 
+        for col1 in range(len(list_copy)): # kombinacje z usunięcia pierwszej kolumny
             list_copy_col1 = copy.deepcopy(list_copy)
             for row in range(len(list_copy)):
                 del list_copy_col1[row][col1] # tak usuwam pierwszą z kolumn
@@ -80,7 +107,7 @@ def able_to_remove(n_list):
     return print(False) # jeśli przeleci po wszystkich
                 
               
-able_to_remove(create_random_n_list(4))
+# able_to_remove(create_random_n_list(4))
 
 
 
@@ -188,7 +215,7 @@ def hetman_problem():
     #     hetman_cord = [0]
     #     hetman_cord = list(find_hetman(length, hetman_cord[0], hetman_cord[0][0] ,hetman_cord[0][1]+1))# <- dwa ostatnie parametry to wartości wiersza, i kolumny z pierwszego hetmana
 
-hetman_problem()
+# hetman_problem()
     
 
 
