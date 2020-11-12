@@ -26,7 +26,7 @@ def sieve_Erastotenes(list_to_filtr):
     filtr_to = len(list_to_filtr)
     for n in [2,3,5,7]:
         i = 2
-        while n*i <= filtr_to: # lecę do ostatniego elementu
+        while n*i <= filtr_to: # lecę do ostatniego elementu, czyli długości tablicy do przefiltrowania
             if n*i in list_to_filtr:
                 list_to_filtr[list_to_filtr.index(n*i)] = False
             i+=1
@@ -34,14 +34,64 @@ def sieve_Erastotenes(list_to_filtr):
 
     return list_to_filtr    
 
+
 def odd_numbers_to_n(n= 100):
     odd_numbers = sorted([number for number in range(1,n)])
     return sieve_Erastotenes(odd_numbers)
 
-# wstępnie zrobię to na masce bitowej będę zapisywał wybrane elementy
+
+def are_a_multiply_of_two_odds(number_to_check_multiply_of_odds):
+    odds = odd_numbers_to_n(50)
+    for el1 in odds:
+        for el2 in odds:
+            if el1 * el2 == number_to_check_multiply_of_odds:
+                return True
+
+def create_random_n_list_one_dimension(n=10): 
+    n_list = [randint(10, 160) for _ in range(n)]
+    return n_list
+
+# maską bitową objechać kombinacje: wyobry z pierwszej listy
+# i pobrać dodatkową wartość z ilości elementów które są w danej kombinacji
+# i potem w drugiej wybrać kombinacje maską bitową, z dodatkowym warunkiem, czy elementów wybranych z kombinacji jest tyle co w pierwszym
+def parts_of_list(list1, list2):
+    for maskbit1 in range(1, 2**len(list1)): # bitowo idzie od końca -> (0001),(0010)... ale u mnie będzie to szło od pierwszego el z indexu do ostatniego
+        count_used_numbers1 = 0
+        sum_used_numbers1 = 0
+        for el1 in list1:
+            if maskbit1 %2:
+                sum_used_numbers1 += el1
+                count_used_numbers1 += 1
+            maskbit1 //= 2
+        # mam potworzone kombinację sum wszystkich liczb z pierwszej listy
+        for maskbit2 in range(1, 2**len(list2)):
+            count_used_numbers2 = 0
+            sum_used_numbers2 = 0
+            for el2 in list2:
+                if maskbit2 %2:
+                    sum_used_numbers2 += el2
+                    count_used_numbers2 += 1
+                maskbit2 //= 2
+                if count_used_numbers2 == count_used_numbers1: # mają być takiej samej długości podzbiory
+                    sum_used_numbers = sum_used_numbers1 + sum_used_numbers2
+                    if are_a_multiply_of_two_odds(sum_used_numbers): # jeśli znajdzie kombinację dwóch liczb pierwszych tworzącą tą sumę to mamy wynik do zadania
+                        return True 
+
+    return False
+        
 
 
-print(odd_numbers_to_n())
+    # for num1 in list1:
+    #     if is_odd(num1):
+    #         for num2 in list2:
+    #             if is_odd(num2):
+    #                 return True
+
+print(parts_of_list(create_random_n_list_one_dimension(), create_random_n_list_one_dimension()))
+# print(odd_numbers_to_n())
+
+
+
 
 # Zad. 2. Dana jest tablica int t[N][N] zawierająca liczby naturalne. Proszę napisać funkcję, która sprawdza czy z tablicy
 # można usunąć jeden wiersz i dwie kolumny, tak aby każdy z pozostałych elementów tablicy był wielokrotnością
