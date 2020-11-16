@@ -8,6 +8,46 @@ def create_random_n_list(n=10):
 # Zad. 1. Dane są dwie tablice int t1[N], int t2[N] wypełnione liczbami naturalnymi. Proszę napisać funkcję, która
 # sprawdza czy z każdej z tablic można wyciąć po jednym kawałku, tak aby suma elementów w obu kawałkach była:
 # co najmniej drugą potęgą dowolnej liczby naturalnej. Łączna długości obu kawałków powinna wynosić 24.
+
+# wydaje mi się że czegoś brakuje
+
+
+
+def create_random_1_dimension_list(n=25):
+    return [randint(1,600) for _ in range(n)]
+
+
+def check_list(list1=create_random_1_dimension_list(), list2=create_random_1_dimension_list()):
+    l1_len = len(list1)
+    l2_len = len(list2)
+    for i1 in range(l1_len):
+        for j1 in range(i1,l1_len):
+            actual_part_of_list1 = list1[i1:j1+1]
+            for i2 in range(l2_len):
+                for j2 in range(i2, l2_len):
+                    actual_part_of_list2 = list2[i2:j2+1]
+                    if len(actual_part_of_list1) + len(actual_part_of_list2) == 24 or len(list1) + len(list2) < 24: # drugi wariant, gdy obydwie list z argumentów są za krótkie 
+                        sum_of_2_parts = sum(actual_part_of_list1) + sum(actual_part_of_list2)
+                        number_to_pow = 2
+                        pow_number = 2
+
+                        while True: # zrobiłem zewnętrzną pętle while, żeby w jednej podnosić sobie podstawę, a w drugiej wykładnik
+                            print(number_to_pow ** pow_number, sum_of_2_parts)
+                            while number_to_pow ** pow_number < sum_of_2_parts: # kiedy znajdzie już taką liczbę której kwadrat jest większy od sumu to kończy szukanie kolejnych
+                                if number_to_pow ** pow_number == sum_of_2_parts:
+                                    return True
+                                elif number_to_pow ** pow_number < sum_of_2_parts:
+                                    pow_number += 1
+                            else:
+                                number_to_pow += 1 # else z while, do podnoszenia podstawy wykładnika
+            
+                            if number_to_pow ** 2 > sum_of_2_parts:
+                                break
+    return False
+
+print(check_list())
+
+
 # Zad. 2. Dana jest tablica int t[N][N] zawierająca liczby naturalne. Proszę napisać funkcję, która sprawdza czy z tablicy
 # można usunąć jeden wiersz i dwie kolumny, tak aby każdy z pozostałych elementów tablicy w zapisie dwójkowym
 # posiadał nieparzystą liczbę jedynek.
@@ -36,7 +76,7 @@ def sieve_Erastotenes(list_to_filtr):
 
 
 def odd_numbers_to_n(n= 100):
-    odd_numbers = sorted([number for number in range(1,n)])
+    odd_numbers = sorted([number for number in range(2,n)])
     return sieve_Erastotenes(odd_numbers)
 
 
@@ -76,21 +116,10 @@ def parts_of_list(list1, list2):
                     sum_used_numbers = sum_used_numbers1 + sum_used_numbers2
                     if are_a_multiply_of_two_odds(sum_used_numbers): # jeśli znajdzie kombinację dwóch liczb pierwszych tworzącą tą sumę to mamy wynik do zadania
                         return True 
-
     return False
         
 
-
-    # for num1 in list1:
-    #     if is_odd(num1):
-    #         for num2 in list2:
-    #             if is_odd(num2):
-    #                 return True
-
-print(parts_of_list(create_random_n_list_one_dimension(), create_random_n_list_one_dimension()))
-# print(odd_numbers_to_n())
-
-
+# print(parts_of_list(create_random_n_list_one_dimension(), create_random_n_list_one_dimension()))
 
 
 # Zad. 2. Dana jest tablica int t[N][N] zawierająca liczby naturalne. Proszę napisać funkcję, która sprawdza czy z tablicy
