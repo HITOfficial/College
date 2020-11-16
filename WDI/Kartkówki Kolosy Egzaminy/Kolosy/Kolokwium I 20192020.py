@@ -45,12 +45,72 @@ def check_list(list1=create_random_1_dimension_list(), list2=create_random_1_dim
                                 break
     return False
 
-print(check_list())
+# print(check_list())
 
 
 # Zad. 2. Dana jest tablica int t[N][N] zawierająca liczby naturalne. Proszę napisać funkcję, która sprawdza czy z tablicy
 # można usunąć jeden wiersz i dwie kolumny, tak aby każdy z pozostałych elementów tablicy w zapisie dwójkowym
 # posiadał nieparzystą liczbę jedynek.
+
+# wychodzi na to że działa
+
+from copy import deepcopy
+
+def count_one_in_decimal(el):
+    count = 0
+    while el //2 > 0:
+        if el % 2:
+            count += 1
+        el //= 2
+        
+    return count
+
+
+def count_odd(list_to_check):
+    count_odds = 0
+    count_all_numbers = 0
+    for row in list_to_check:
+        for single_el in row:
+            if single_el % 2:
+                count_odds += 1
+            count_all_numbers += 1
+
+    if count_all_numbers == count_odds:
+        return True
+    else:
+        False
+
+
+def list_with_only_odd_in_decimal(list_to_use=create_random_n_list()):
+    list_as_count_one_in_binary = [[count_one_in_decimal(col) for col in row] for row in list_to_use] # konwertuję sobie na listę skonwertowane jedynki z binarki
+    for el in list_as_count_one_in_binary:
+        print(el)
+        
+    row_len = len(list_as_count_one_in_binary)
+    for i in range(row_len):
+        list_copy_to_row = deepcopy(list_as_count_one_in_binary) # będę operował na kopii listy, bo jest dwu wymiarowa, a listy są mutable, więc deepcopy będzie potrzebne
+        del list_copy_to_row[i] # będę usuwał pierwsze rząd potem oblecę kolumny
+        for col1 in range(len(list_copy_to_row)-1): # pierwsza kolumna będzie usuwana od 0 do n-1
+            list_copy_to_col1 = deepcopy(list_copy_to_row) # kopia przed usunięciem pierwszej kolumny
+            for row1 in range(len(list_copy_to_row)):
+                del list_copy_to_col1[row1][col1]
+
+            for col2 in range(col1, len(list_copy_to_col1)): # analogicznie postępuję z drugą kolumną
+                list_copy_to_col2 = deepcopy(list_copy_to_col1)
+                for row2 in range(len(list_copy_to_row)):
+                    del list_copy_to_col1[row2][col1]
+
+                if count_odd(list_copy_to_col2):
+                    return True
+                else:
+                     continue
+
+    return False
+
+
+
+print(list_with_only_odd_in_decimal())
+
 # Zad. 3. Dana jest tablica t[N][N] wypełniona liczbami całkowitymi. Tablica reprezentuje szachownicę. Proszę napisać
 # funkcję, która sprawdza czy da się umieścić w każdym wierszu jednego króla szachowego tak aby żadne dwa króle
 # nie stały w odległości mniejszej niż dwa ruchy króla. Dodatkowo, suma wartości pól zajmowanych przez wszystkie
