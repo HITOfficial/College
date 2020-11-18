@@ -18,7 +18,66 @@ def NWW(m1, m2):
     return int(((m1 *m2) // NWD(m1, m2)))
 
 
-def operation_on_irration_number(number1, sign, number2 = (1,1)): # potęgowania i pierwiastkowania nie robiłem bo delikatnie musiał bym zmienić wnętrze
+
+
+
+
+def sum_irrational(number1, number2):
+    common_denominator = NWW(number1[1], number2[1])
+    return (
+        number1[0] * (common_denominator//number1[1]) +\
+        number2[0] * (common_denominator//number2[1]),
+        common_denominator
+    )
+
+def difference_irrational(number1, number2):
+    common_denominator = NWW(number1[1], number2[1])
+    return (
+        number1[0] * (common_denominator//number1[1]) -\
+        number2[0] * (common_denominator//number2[1]),
+        common_denominator
+    )
+
+
+def multiply_irrational(number1, number2):
+    nominator = number1[0] * number2[0] 
+    denominator = number1[1] * number2[1]
+    nominator ,denominator = (nominator // NWD(nominator, denominator), (denominator // NWD(nominator, denominator))) # skracał ułami do postaci już nieskracalnej
+    return (nominator, denominator)
+
+
+def multiply_irrational(number1, number2):
+    nominator = number1[0] * number2[0] 
+    denominator = number1[1] * number2[1]
+    nominator ,denominator = (nominator // NWD(nominator, denominator), (denominator // NWD(nominator, denominator))) # skracał ułami do postaci już nieskracalnej
+    return (nominator, denominator)
+
+
+def divide_irrational(number1, number2):
+    nominator = number1[0] * number2[1] 
+    denominator = number1[1] * number2[0]
+    nominator ,denominator = (nominator // NWD(nominator, denominator), (denominator // NWD(nominator, denominator))) # skracał ułami do postaci już nieskracalnej
+    return (nominator, denominator)
+
+
+def pow_irrational(number, power):
+    nominator = number[0] ** power
+    denominator = number[1] ** power
+    return (nominator, denominator)
+
+
+# print(pow_irrational((2,3),6))
+
+
+
+
+
+
+
+
+
+
+def operation_on_irration_number(number1, number2, sign): # nie robiłem do pow i sqrt
     l1 = number1[0] # tuple są imutable
     m1 = number1[1]
     l2 = number2[0]
@@ -26,9 +85,9 @@ def operation_on_irration_number(number1, sign, number2 = (1,1)): # potęgowania
 
     if sign == '+'  or sign == '-':
         common_denominator = NWW(m1,m2)
+        print(common_denominator)
         l1 *= int(common_denominator // m1) # sprowadzam do wspólnego mianownika liczby
-        l2 *= int(common_denominator // m2)
-
+        l2 *= int(common_denominator // m2) # sprowadzam do wspólnego mianownika liczby
         if sign == '+':
             return (l1+l2, common_denominator)
         if sign == '-':
@@ -45,8 +104,7 @@ def operation_on_irration_number(number1, sign, number2 = (1,1)): # potęgowania
             nominator = int(l1 * m2)
             denominator = int(l2 * m1) # nie sprawdzałem ale dla pewności, konwetuje na inta wszystkie wyrażenia
 
+        print(nominator, denominator)
+        print(NWD(nominator, denominator))
         nominator, denominator = int(nominator // NWD(nominator, denominator)), int(denominator // NWD(nominator, denominator)) # żeby nie używać dodatkowych zmiennych tuplem skracam o ile mogę licznik i mianownik, przez najwiekszy wspólny dzielnik
-        return (nominator, denominator)    
-
-
-print(operation_on_irration_number((3,8),(1,2),'/'))
+        return (nominator, denominator)
