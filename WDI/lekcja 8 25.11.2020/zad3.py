@@ -39,4 +39,33 @@ def move_king(list_of_weight, actual_position, move_count, weight): # position a
     else:
         return print(weight)
 
-print(move_king(two_dim_list(),(0,4), 0, 0))
+# print(move_king(two_dim_list(),(0,4), 0, 0))
+
+
+
+
+
+# WSZYSTKIE MOŻLIWE RUCHY
+def mv_king(list_to_use,j):
+    
+    list_of_weight = []
+
+    def move_king_reccurence(list_to_use,j, i=0,weight=0): # list of weights, col, row, weight of used cords
+        weight += list_to_use[i][j] # a inkrementuję na samym początku, bo mam włączyć wszystkie wagi
+        if i < 7: # idę do 7 wiersza, i na nim kończę
+            if j-1 > 0:
+                move_king_reccurence(list_to_use, j-1, i+1, weight) # przechodzę tylko o 1 wiersz w dół
+            if j+1 < len(list_to_use):
+                move_king_reccurence(list_to_use, j+1, i+1, weight)
+
+            move_king_reccurence(list_to_use, j, i+1) 
+        else:
+            list_of_weight.append(weight)
+
+
+    move_king_reccurence(list_to_use,j)
+
+    x = sorted(list_of_weight)
+    print(x[0])
+
+mv_king(two_dim_list(),5)
