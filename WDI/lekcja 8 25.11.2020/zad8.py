@@ -27,6 +27,3 @@ def is_able_to_weight(weight_to_find, weights_list, actual_weight=0, used_weight
 
 is_able_to_weight(13, [7,6,3,2,1,5])
 
-
-# t = [1]
-# print(t[-1])
