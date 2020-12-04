@@ -53,4 +53,31 @@ def chess_jumper_moves(n=3, start=(0,0)):
     chess_jumper(start)
 
     return list_to_fill
-chess_jumper_moves()
+
+    
+n = 8
+T = [[0 for _ in range(n)] for _ in range(n)]
+
+
+# Z POKAZANIEM HISTORII SKOKÓW SKOCZKA
+ 
+
+
+
+# musi lecieć jednocześnie tylko jedna rekurencja, aby nie nadpisywać już nieskończoność wykonanych ruchów
+def chess_jumper_fill_moves(list_to_fill, count=1, actual_i=0, actual_j=0):
+    moves = [(-2,1), (-1,2), (1,2), (2,1), (2,-1), (1,-2), (-1,-2), (-2,-1)] # pozycje, o które może się przenieść skoczek
+    for i,j in moves: # wypakowywwuję tupla i będę sprawdzał czy mogę postawić skoczka na nowym miejscu
+        new_i = actual_i + i
+        new_j = actual_j + j
+        if new_i <= len(list_to_fill) -1 and new_i >= 0 and new_j <= len(list_to_fill) -1 and new_j >= 0: # dodatkowy warunek aby nie wyskoczyć poza tablicę oraz lista jest wymiarów NxN a więc spokojnie mogę sprawdzać czy nie wychodzi poza wiersz przy warunku z kolumn
+            if list_to_fill[new_i][new_j] == 0:
+                list_to_fill[new_i][new_j] = count +1 
+                chess_jumper_fill_moves(list_to_fill, count +1, new_i, new_j)
+                return # zakończenie aktualnej rekurencji i rozpoczęcie kolejnej
+
+    for row in list_to_fill:
+        print(row)   
+
+
+chess_jumper_fill_moves(T, 0, 2, -1)
