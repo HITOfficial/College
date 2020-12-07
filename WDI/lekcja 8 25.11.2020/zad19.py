@@ -27,7 +27,7 @@ def move_king_recursion(list_of_fields, w=0, k=0, end_w=4, end_k=4): # tablica d
         new_w = i + w
         new_k = j + k
         # warunek, aby się zbliżać do miejsca końcowego
-        if (abs(end_w - new_w) + abs(end_k - new_k)) < abs(end_k - k) + abs(end_k - k) and \
+        if (abs(end_w - new_w) + abs(end_k - new_k)) <= abs(end_w - w) + abs(end_k - k) and \
             move_king(list_of_fields, new_w, new_k, list_of_fields[w][k]):
             return move_king_recursion(list_of_fields, new_w, new_k, end_w, end_k)
 
