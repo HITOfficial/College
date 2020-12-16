@@ -29,10 +29,7 @@ def checked_list_sum(t, i, j, actualy_checked_list): # lista, wiersz i kolumna n
 def false_list(t):
     return [[False for _ in range(len(t))] for _ in range(len(t))]
 
-# print(checked_list_sum(t,2,3 ,false_list(t)))
 
-
-# jest bug gdy obydwa szachy znajdują się na tej samej kolumnie / wierszu
 def is_posible_to_move_rooks(t,r1, r2): # list of fields, rook1(x,y), rook2(x,y)
     checked_list = false_list(t)
     rook_checked_sum =  checked_list_sum(t, r1[0], r1[1], checked_list) + checked_list_sum(t, r2[0], r2[1], checked_list) # referencja na tablicy, więc jej nie muszę zwracać
