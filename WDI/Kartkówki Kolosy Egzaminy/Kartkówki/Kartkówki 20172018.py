@@ -4,8 +4,10 @@
 # poªo»enia dwóch wie», funkcja powinna zwróci¢ warto±¢ logiczn¡.
 # Uwaga: zakªadamy, »e wie»a szachuje caªy wiersz i kolumn¦ z wyª¡czeniem pola, na którym stoi.
 
-from random import randint
+from random import randint, seed
 
+from sympy.functions.elementary.complexes import re
+from sympy.simplify.fu import TR0
 t = [[randint(1,10) for _ in range(8)] for _ in range(8)]
 
 
@@ -48,4 +50,28 @@ def is_posible_to_move_rooks(t,r1, r2): # list of fields, rook1(x,y), rook2(x,y)
 
     return False
 
-print(is_posible_to_move_rooks(t, (1,1), (2,3)))
+# print(is_posible_to_move_rooks(t, (1,1), (2,3)))
+
+
+
+
+
+# Dana jest tablica wypeªniona liczbami naturalnymi int t[N][N] reprezentuj¡ca szachownic¦. Prosz¦ napisa¢
+# funkcj¦, która sprawdza, czy jest mo»liwe ustawienie dwóch wzajemnie szachuj¡cych si¦ skoczków tak, aby
+# suma warto±ci pól, na których stoj¡ skoczki, byªa liczb¡ pierwsz¡. Do funkcji nale»y przekaza¢ tablic¦ t,
+# funkcja powinna zwróci¢ warto±¢ typu bool
+from sympy import isprime
+
+
+def check_chess_jumpers(t): # table
+    chess_jumper_moves = [(-1,2),(1,2),(2,1),(2,-1),(1,-2)] # idę w dół żeby nie robić powtórek
+    for i in range(len(t)):
+        for j in range(len(t)):
+            for x,y in chess_jumper_moves:
+                if i+x >= 0 and i+x < len(t) and j+y >= 0 and j+y < len(t):
+                    if isprime(t[i][j] + t[i+x][j+y]):
+                        return True
+    return False
+
+
+print(check_chess_jumpers(t))
