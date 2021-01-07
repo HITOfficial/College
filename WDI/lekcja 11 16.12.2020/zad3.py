@@ -4,27 +4,12 @@
 # - funkcja iteracyjna,
 # - funkcja rekurencyjna.
 
-
-# moga sie elementy powtarzac wzajemnie w tych listach
-
 class Node:
     def __init__(self, next_node, value):
         self.next_node = next_node
         self.value = value
 
 
-def show_nodes(node):
-    print(node.value)
-    while node.next_node != None:
-        print(node.next_node.value)
-        node = node.next_node
-
-# gdy dwa elementy beda mialy ta sama wartosc, to biore element z pierwszej listy
-
-# mam elementy z 2 roznych list i porownuje z nich wartosci pod 
-
-
-# iteracyjnie
 def combine_nodes(node1, node2):
     combined_node = None
 
@@ -84,3 +69,60 @@ def combine_nodes(node1, node2):
 # node2 = Node(Node(Node(None,12),11), 7)
 # print(show_nodes(combine_nodes(node1, node2)))
 
+
+# College
+class Node:
+    def init(self, value, next_one):
+        self.value = value
+        self.next = None
+
+#Iteration
+
+def concatenate(f1,f2): # wskaznik1, wskaznik2
+    f = None
+
+    if f1.value < f2.value:
+        f = f1
+        f1 = f1.next
+    else:
+        f = f2
+        f1 = f1.next # przeskakuje na kolejny element z listy wskaznikowej
+
+    first_element = f
+
+    while f1 != None and f2 != None:
+        if f1.value < f2.value:
+            f = f1
+            f1 = f1.next
+
+        else:
+            f = f2
+            f2 = f2.next # przeskakuje na kolejny element z listy wskaznikowej
+
+        f = f.next
+    # jedna z wezlow sie skonczyl
+    
+    if f1 != None:
+        f = f1
+    else:
+        f = f1
+
+    return first_element    
+
+
+#Recursion
+
+def concatenate_rec(l1, l2): # wezel1, wezel2
+    if l1 == None:
+        return l2
+    if l2 == None:
+        return l1
+    
+    if l1.value < l2:
+        res = l1
+        res.next = concatenate_rec(l1.next, l2)
+    else:
+        res = l1
+        res.next = concatenate_rec(l1.next, l2)
+        
+    return res
