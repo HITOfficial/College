@@ -23,7 +23,7 @@ def number_to_list(number):
 
 
 def count_repeats(number_as_list):
-    # trochę nie efektywne ale nie będę naruszał wymiarów tablicy, będę tylko markował pola które użyłem spowrotem na None
+    # trochę nie efektywne ale nie będę naruszał wymiarów tablicy, będę tylko markował pola które użyłem z powrotem na None
     digit_repeats_sum = 0
     for i in range(len(number_as_list)-1):
         digit_repeats = 1
