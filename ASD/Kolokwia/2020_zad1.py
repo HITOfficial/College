@@ -67,7 +67,7 @@ def pretty_sort(T): # sortuje liczby przez piękność malejąco
     
     quick_sort_tuple(T) # sortuje tuple rosnąco
 
-    for i in range((len(T)//2)): # dodaję +1 bo inaczej gdy lista będzie nieparzysta, środkowy element pominę i pozostanie nadal tuplem 
+    for i in range((len(T)//2)):
         T[i], T[len(T)-1-i] = T[len(T)-1-i][1], T[i][1]
     if len(T)%2 == 1:
         T[len(T)//2] = T[len(T)//2][1] # środkowy el dla nieparzystych zmieniam ręcznie bo inaczej algo się posypie
