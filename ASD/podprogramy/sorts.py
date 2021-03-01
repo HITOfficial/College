@@ -7,6 +7,7 @@ def selection_sort(t):
         t[i], t[lowest_index] = t[lowest_index], t[i] 
     return t
 
+
 def bubble_sort(t):
     for i in range(len(t)):
         for j in range(1,len(t)):
