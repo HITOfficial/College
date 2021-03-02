@@ -1,30 +1,20 @@
 //  erastotenes sieve
 #include <stdio.h>
 
-int main () {
-    printf("%d\n hello");
-    int T[20];
-    for(int i =0; i<=1000; i+= 1){
+int main(){
+    int T[1001];
+    for(int i=0; i<=1000; i+= 1){
         T[i] = i;
     }
-    int number = 2;
-    for(int i=2; i*number < sizeof(T)/sizeof(T[0]); i++){
-        T[i*number] = 0;
+    int ErastotenesNumbers[4] = {2,3,5,7};
+    for(int j=0; j<4; j++){
+        for(int i=2; i*ErastotenesNumbers[j] < sizeof(T)/sizeof(*T); i++){
+            T[ErastotenesNumbers[j] * i] = 0;
+        }
     }
-    number = 3;
-    for(int i=2; i*number < sizeof(T)/sizeof(T[0]); i++){
-        T[i*number] = 0;
-    }
-    number = 5;
-    for(int i=2; i*number < sizeof(T)/sizeof(T[0]); i++){
-        T[i*number] = 0;
-    }
-    number = 7;
-    for(int i=2; i*number < sizeof(T)/sizeof(T[0]); i++){
-        T[i*number] = 0;
-    }
-    for(int i = 0; i < sizeof(T)/sizeof(T[0]); i++){
-        if(T[i] != 0)
+    for(int i = 0; i < sizeof(T)/sizeof(*T); i++){
+        if(T[i] != 0){
             printf("%d\n",T[i]);
+        }
     }
 }
