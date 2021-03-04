@@ -53,21 +53,22 @@ def quick_sort_half(t,start=0,end=None):
     return t
 
 
-def hindus_quick_sort(T, begin, end): # lewym szukam wiekszych, prawym mniejszych
-    pivot = T[begin]
-    left = begin+1
-    right = end
-    while left < right:
-        while T[left] <= pivot: # szukam większych
-             left += 1
-        while T[right] > pivot: # szukam mniejszych
-             right -= 1
-        if left < right:
-            T[left], T[right] = T[right], T[left]
-    T[begin], T[right] = T[right], T[begin]
-    return right
+
 
 def quick_sort(T,begin=0, end=None):
+    def hindus_quick_sort(T, begin, end): # lewym szukam wiekszych, prawym mniejszych
+        pivot = T[begin]
+        left = begin+1
+        right = end
+        while left < right:
+            while T[left] <= pivot and left < end: # szukam większych dodatkowe ograniczenie zeby nie wyskoczyc poza liste
+                left += 1
+            while T[right] > pivot: # szukam mniejszych
+                right -= 1
+            if left < right:
+                T[left], T[right] = T[right], T[left]
+        T[begin], T[right] = T[right], T[begin]
+        return right
     if end is None:
         end = len(T)-1
     if begin < end: # pozostał 1 element do sprawdzenia
@@ -76,9 +77,24 @@ def quick_sort(T,begin=0, end=None):
         quick_sort(T, part+1, end)
     return T        
 
-T = [7,8,10,5,9,2,1,15,7]
 
-print(quick_sort(T))
+from random import randint, seed
+from time import time
+seed(30)
+
+T = [randint(1,10000) for _ in range(50000)]
+s1 = time()
+quick_sort(T)
+e1 = time() - s1
+print("College quicksort: ",e1)
+s2 = time()
+quick_sort_half(T)
+e2 = time() - s2
+print("Indian quicksort: ",e2)
+s3 = time()
+comb_sort(T)
+e3 = time() - s3
+print("combsort: ",e3)
 
 
 
