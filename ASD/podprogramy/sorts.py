@@ -31,7 +31,7 @@ def comb_sort(t):
     return t
 
 
-def quick_sort(t,start=0,end=None):
+def quick_sort_half(t,start=0,end=None):
     if end is None:
         end = len(t)-1 
     left = start
@@ -44,13 +44,42 @@ def quick_sort(t,start=0,end=None):
             right -= 1
         if left <= right:
             t[left], t[right] = t[right], t[left]
-            left += 1
-            right -= 1
+            left +=1
+            right -=1
     if start < right:
-        quick_sort(t, start, right)
+        quick_sort_half(t, start, right)
     if end > left:
-        quick_sort(t, left, end)    
+        quick_sort_half(t, left, end)    
     return t
+
+
+def hindus_quick_sort(T, begin, end): # lewym szukam wiekszych, prawym mniejszych
+    pivot = T[begin]
+    left = begin+1
+    right = end
+    while left < right:
+        while T[left] <= pivot: # szukam większych
+             left += 1
+        while T[right] > pivot: # szukam mniejszych
+             right -= 1
+        if left < right:
+            T[left], T[right] = T[right], T[left]
+    T[begin], T[right] = T[right], T[begin]
+    return right
+
+def quick_sort(T,begin=0, end=None):
+    if end is None:
+        end = len(T)-1
+    if begin < end: # pozostał 1 element do sprawdzenia
+        part = hindus_quick_sort(T, begin, end)        
+        quick_sort(T, begin, part-1)        
+        quick_sort(T, part+1, end)
+    return T        
+
+T = [7,8,10,5,9,2,1,15,7]
+
+print(quick_sort(T))
+
 
 
 def revers_list(t):
@@ -59,3 +88,4 @@ def revers_list(t):
         t[i], t[len(t)-1-i] = t[len(t)-1-i], t[i]
         i+=1 
     return t
+
