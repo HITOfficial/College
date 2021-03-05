@@ -69,6 +69,8 @@ def quick_sort(T,begin=0, end=None):
                 T[left], T[right] = T[right], T[left]
         T[begin], T[right] = T[right], T[begin]
         return right
+        
+
     if end is None:
         end = len(T)-1
     if begin < end: # pozostał 1 element do sprawdzenia
@@ -80,21 +82,8 @@ def quick_sort(T,begin=0, end=None):
 
 from random import randint, seed
 from time import time
-seed(30)
+seed(42)
 
-T = [randint(1,10000) for _ in range(50000)]
-s1 = time()
-quick_sort(T)
-e1 = time() - s1
-print("College quicksort: ",e1)
-s2 = time()
-quick_sort_half(T)
-e2 = time() - s2
-print("Indian quicksort: ",e2)
-s3 = time()
-comb_sort(T)
-e3 = time() - s3
-print("combsort: ",e3)
 
 
 
@@ -105,3 +94,52 @@ def revers_list(t):
         i+=1 
     return t
 
+def merge(T,l,m,r):
+    L = [T[i] for i in range(l,m+1)]
+    R = [T[i] for i in range(m+1,r+1)]
+    i = j = 0
+    k = l
+    while(i <= m-l and j <= r-m-1): # robię m-l ponieważ w indexach w tymczasowych tablicach zaczynam od indexu 0 
+        if L[i] <= R[j]:
+            T[k] = L[i]
+            i+=1
+        else:
+            T[k] = R[j]
+            j+=1
+        k+=1
+    while i <= m-l: # dopełniam elementami pozostałymi z i
+        T[k] = L[i]
+        i+=1
+        k+=1
+    while j <= r-m-1: # dopełniam elementami pozostałymi w j
+        T[k] = R[j]
+        j+=1
+        k+=1
+
+
+def mergesort(T,l=0,r=None):
+    if r is None:
+        r = len(T)-1
+    if l < r:
+        m = (l+r)//2 # element środkowy
+        mergesort(T, l, m)
+        mergesort(T,m+1, r)
+        merge(T,l,m,r)
+
+T = [randint(1,10) for _ in range(1000000)]
+# s1 = time()
+# quick_sort(T)
+# e1 = time() - s1
+# print("Hindus quicksort: ",e1)
+s2 = time()
+quick_sort_half(T)
+e2 = time() - s2
+print("G quicksort: ",e2)
+s3 = time()
+comb_sort(T)
+e3 = time() - s3
+print("Combsort: ",e3)
+s4 = time()
+merge_sort(T)
+e4 = time() - s4
+print("Merge: ",e4)
