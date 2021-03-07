@@ -126,11 +126,34 @@ def mergesort(T,l=0,r=None):
         mergesort(T,m+1, r)
         merge(T,l,m,r)
 
-T = [randint(1,10) for _ in range(1000000)]
-# s1 = time()
-# quick_sort(T)
-# e1 = time() - s1
-# print("Hindus quicksort: ",e1)
+def count_sort(T):
+    max_el = min_el = 0
+    for el in T:
+        max_el = max(max_el, el) # najwiekszy element
+        min_el = min(min_el, el) # najwiekszy element
+
+    count_T = [0] * (max_el-min_el+1) # max()-min() +1 bo wlacznie z 0
+    for el in T:
+        count_T[el-min_el] += 1 # uwzglednienie liczb ujemnych
+    for j in range(1, len(count_T)): 
+        count_T[j] += count_T[j-1] # sumuje z wartoscia pod poprzednim
+    sort_T = [None] * len(T) # posortowana tablica
+    count = len(T)
+    min_el_negation = min_el*-1
+    for i in range(0,len(T)):
+        sort_T[count_T[T[i] + min_el_negation]-1] = T[i] # indexy w tablicy od 0 dlatego -1
+        count_T[T[i] + min_el_negation] -= 1
+
+    return sort_T
+
+
+
+
+T = [randint(-100,1000000) for _ in range(100000)]
+s1 = time()
+quick_sort(T)
+e1 = time() - s1
+print("Hindus quicksort: ",e1)
 s2 = time()
 quick_sort_half(T)
 e2 = time() - s2
@@ -140,6 +163,14 @@ comb_sort(T)
 e3 = time() - s3
 print("Combsort: ",e3)
 s4 = time()
-merge_sort(T)
+mergesort(T)
 e4 = time() - s4
 print("Merge: ",e4)
+s5 = time()
+count_sort(T)
+e5 = time() - s5
+print("count: ",e5)
+
+
+
+    
