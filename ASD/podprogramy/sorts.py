@@ -31,7 +31,7 @@ def comb_sort(t):
     return t
 
 
-def quick_sort_half(t,start=0,end=None):
+def quick_sort_half(t,start=0,end=None): # pivot w połowie
     if end is None:
         end = len(t)-1 
     left = start
@@ -126,7 +126,7 @@ def mergesort(T,l=0,r=None):
         mergesort(T,m+1, r)
         merge(T,l,m,r)
 
-def count_sort(T):
+def count_sort(T): # działa mega szybko na mały range liczb
     max_el = min_el = 0
     for el in T:
         max_el = max(max_el, el) # najwiekszy element
@@ -138,7 +138,6 @@ def count_sort(T):
     for j in range(1, len(count_T)): 
         count_T[j] += count_T[j-1] # sumuje z wartoscia pod poprzednim
     sort_T = [None] * len(T) # posortowana tablica
-    count = len(T)
     min_el_negation = min_el*-1
     for i in range(0,len(T)):
         sort_T[count_T[T[i] + min_el_negation]-1] = T[i] # indexy w tablicy od 0 dlatego -1
@@ -149,28 +148,72 @@ def count_sort(T):
 
 
 
-T = [randint(-100,1000000) for _ in range(100000)]
+
+def quicksort(T):
+    def quick_sort(T,l=0,r=None): # table, range to sort: left, right
+        if r is None:
+            r = len(T)-1
+        if r-l <1:
+            return # 1 element do posortowanie
+        limit = partition(T,l,r)
+        quick_sort(T,l,limit-1)
+        quick_sort(T,limit+1,r)
+        return T
+
+    def partition(T,i,r):
+            pivot = T[r]
+            limit = i-1 # granica 
+            for j in range(i,r): # szuka do elementu przed pivotem
+                if T[j] <= pivot:
+                    limit +=1 
+                    T[limit], T[j] = T[j], T[limit]
+            T[limit+1], T[r] = T[r], T[limit+1]
+            return limit+1
+    quick_sort(T,0,len(T)-1)
+    
+    return T
+
+
+
+
+T = [randint(-1000,1000) for _ in range(1000000)]
 s1 = time()
 quick_sort(T)
 e1 = time() - s1
 print("Hindus quicksort: ",e1)
+T = [randint(-1000,1000) for _ in range(1000000)]
 s2 = time()
 quick_sort_half(T)
 e2 = time() - s2
 print("G quicksort: ",e2)
+T = [randint(-1000,1000) for _ in range(1000000)]
 s3 = time()
 comb_sort(T)
 e3 = time() - s3
 print("Combsort: ",e3)
+T = [randint(-1000,1000) for _ in range(1000000)]
 s4 = time()
 mergesort(T)
 e4 = time() - s4
 print("Merge: ",e4)
+T = [randint(-1000,1000) for _ in range(1000000)]
 s5 = time()
 count_sort(T)
 e5 = time() - s5
 print("count: ",e5)
+T = [randint(-1000,1000) for _ in range(1000000)]
+s6 = time()
+quicksort(T)
+e6 = time() - s6
+print("quicksort last_p: ",e6)
 
 
 
+
+
+
+
+
+    
+    
     
