@@ -82,7 +82,7 @@ def quick_sort(T,begin=0, end=None):
 
 from random import randint, seed
 from time import time
-seed(42)
+seed(40)
 
 
 
@@ -146,19 +146,12 @@ def count_sort(T): # działa mega szybko na mały range liczb
     return sort_T
 
 
-
-
-
 def quicksort(T):
     def quick_sort(T,l=0,r=None): # table, range to sort: left, right
-        if r is None:
-            r = len(T)-1
-        if r-l <1:
-            return # 1 element do posortowanie
-        limit = partition(T,l,r)
-        quick_sort(T,l,limit-1)
-        quick_sort(T,limit+1,r)
-        return T
+        while l<r:
+            limit = partition(T,l,r)
+            quick_sort(T,l,limit-1)
+            l=limit+1
 
     def partition(T,i,r):
             pivot = T[r]
@@ -170,42 +163,68 @@ def quicksort(T):
             T[limit+1], T[r] = T[r], T[limit+1]
             return limit+1
     quick_sort(T,0,len(T)-1)
-    
+    return T
+
+
+def heapsort(T):
+    def max_heap(T,n,i): # table, len(T), index rodzica
+        left = 2*i +1
+        right = 2*i +2
+        i_copy = i
+        if left < n and T[left] > T[i]: i_copy = left
+        if right < n and T[right] > T[i_copy]: i_copy = right
+        if i != i_copy: # znalezione dziecko z wartoscia wieksza
+            T[i], T[i_copy] = T[i_copy], T[i]
+            max_heap(T,n, i_copy) # szuka poddzieci do dzieci
+
+    n = len(T)
+    def build_heap(T,n):
+        for i in range(((n//2)-1),-1,-1): # budowa kopca
+            max_heap(T,n,i)
+            
+    build_heap(T,n)
+    for i in range(n-1,0,-1):
+        T[0], T[i] = T[i], T[0] # podmieniam aktualnie znaleziony najwiekszy z kolejnymi elementami od konca z tablicy
+        max_heap(T,i,0)
     return T
 
 
 
-
-T = [randint(-1000,1000) for _ in range(1000000)]
+T = [randint(-10000,10000) for i in range(1000000)]
 s1 = time()
 quick_sort(T)
 e1 = time() - s1
 print("Hindus quicksort: ",e1)
-T = [randint(-1000,1000) for _ in range(1000000)]
+T = [randint(-10000,10000) for i in range(1000000)]
 s2 = time()
 quick_sort_half(T)
 e2 = time() - s2
 print("G quicksort: ",e2)
-T = [randint(-1000,1000) for _ in range(1000000)]
+T = [randint(-10000,10000) for i in range(1000000)]
 s3 = time()
 comb_sort(T)
 e3 = time() - s3
 print("Combsort: ",e3)
-T = [randint(-1000,1000) for _ in range(1000000)]
+T = [randint(-10000,10000) for i in range(1000000)]
 s4 = time()
 mergesort(T)
 e4 = time() - s4
 print("Merge: ",e4)
-T = [randint(-1000,1000) for _ in range(1000000)]
+T = [randint(-10000,10000) for i in range(1000000)]
 s5 = time()
 count_sort(T)
 e5 = time() - s5
 print("count: ",e5)
-T = [randint(-1000,1000) for _ in range(1000000)]
+T = [randint(-10000,10000) for i in range(1000000)]
 s6 = time()
 quicksort(T)
 e6 = time() - s6
 print("quicksort last_p: ",e6)
+T = [randint(-10000,10000) for i in range(1000000)]
+s7 = time()
+heapsort(T)
+e7 = time() - s7
+print("heapsort: ",e7)
 
 
 
