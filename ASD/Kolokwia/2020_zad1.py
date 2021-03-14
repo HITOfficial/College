@@ -67,13 +67,59 @@ def pretty_sort(T): # sortuje liczby przez piękność malejąco
     
     quick_sort_tuple(T) # sortuje tuple rosnąco
 
-    for i in range((len(T)//2)):
+    for i in range((len(T)//2)): # dodaję +1 bo inaczej gdy lista będzie nieparzysta, środkowy element pominę i pozostanie nadal tuplem 
         T[i], T[len(T)-1-i] = T[len(T)-1-i][1], T[i][1]
     if len(T)%2 == 1:
         T[len(T)//2] = T[len(T)//2][1] # środkowy el dla nieparzystych zmieniam ręcznie bo inaczej algo się posypie
     return T
 
 
-T = [randint(1,77777) for _ in range(700)]
 
-print(pretty_sort(T))
+# drugi sposób używając countsort:
+
+def points(number): # cyfry 0-9
+    T = [0]*10
+    while number != 0:
+        T[number%10] += 1
+        number //= 10
+    points = 0
+    for el in T:
+        if el > 1:
+            points -= (el+10)
+        else:
+            points += el
+    return points
+
+
+def table_with_points(T):
+    T_with_points = [(points(T[i]),i) for i in range(len(T))] # punkty, index pod którym stoi
+    return T_with_points
+
+
+def min_max_table_tuple(T):
+    min_el = T[0][0] # biorę 1wszy el
+    max_el = T[0][0]
+    for el,_ in T: # o 1 wiecej el w loopie
+        if el < min_el:
+            min_el = el
+        elif el > max_el:
+            max_el = el
+    return min_el, max_el
+
+
+def sort_wonder_table(T):
+    T_points_id = table_with_points(T)
+    min_el, max_el = min_max_table_tuple(T_points_id)
+
+    T_count = [0] * (max_el-min_el+1) # +1 bo zaczynaja sie indexy od 0
+    for el,_ in T_points_id: # markuje elementy ktore dodalem
+        T_count[el-min_el] += 1
+    for i in range(1,len(T_count)): # sumuje z poprzednim
+        T_count[i] += T_count[i-1]
+
+    T_sorted = [None]*len(T) # tablica posortowana od najmniej do najpiękniejszych
+    for i in range(len(T)):
+        T_sorted[T_count[T_points_id[i][0] - min_el]-1] = T[i] # indexy w tablicy od 0 dlatego -1
+        T_count[T_points_id[i][0] - min_el] -= 1
+    return list(reversed(T_sorted))
+
