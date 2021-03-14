@@ -66,6 +66,10 @@ def quick_sort(L):
     return left, right
 
 
+def quicker_sort(L): # główna funkcja
+    return quick_sort(L)[0]
+
+
 def tab2list( A ):
     H = Node()
     C = H
@@ -92,7 +96,7 @@ L = tab2list( T )
 
 print("przed sortowaniem: L =", end=" ")
 print_list(L) 
-L, y = quick_sort(L)
+L = quicker_sort(L)
 print("po sortowaniu: L =", end=" ")
 print_list(L)
 
