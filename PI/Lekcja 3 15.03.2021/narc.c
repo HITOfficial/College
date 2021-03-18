@@ -41,19 +41,29 @@ int decToSys(int n,int b, int m){ // number, base, digits
     return 1;
 }
 
+int powMod10(int a,int b){ // pow wbudowany źle liczył i pow(5,3) -> 124 zamiast 125
+    int c = a;
+    for(int i=1; i<b; i++){
+        c *= a;        
+    }
+    return c;
+}
+
 
 int isNarc(int n, int b,int m) { // number, base, digits
     int n_sum = 0;
-    while(n > 0){
-        n_sum += pow(n%b,m);
-        // if (pow(n%b,m) == 0){
-        //     n_sum += 1;
-        // }
-        n /= b; 
+    int T[m];
+    int i = m-1;
+    while(n>0){
+        T[i] = n%b;
+        n /=b;
+        i-=1;
+    }
+    for(int i=0; i<m; i++){
+        n_sum += powMod10(T[i],m);
     }
     return n_sum;
 }
-
 
 
 /// FFF(hex) = (2^4)*(2^4)*(2*4)-1 = 16^3
@@ -80,5 +90,4 @@ int main(void){
     if(flag == 0){
         printf("NO");
     }
-    // printf("%d",isNarc(126,11,3));
 }
