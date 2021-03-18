@@ -15,7 +15,7 @@ def bucketsort(T,a=0,b=1): # Table, przedzial defaultowo [0-1) bo inaczej muszę
     B = [list() for _ in range(n)] # kubełki
     for el in T:
         # rozpisałem na kartce i działa
-        index = floor(((el-a)/(a+b))*n) # przestawienie na przedział 0-1 -> ((element - dół przedziału) / (suma granic przedziału)) * ilość elementów w przedziale
+        index = floor(((el-a)/(a+b))*n) # przestawienie na przedział 0-1 -> (((element - dół przedziału) / (suma granic przedziału)) * ilość elementów w tablicy)
         B[index].append(el) # podłoga ponieważ indexy liczymy od 0
     for b_id in range(n): # bucket id
         B[b_id] = bubblesort(B[b_id])
