@@ -67,7 +67,7 @@ def bucketsort_nodelist(L,a=0,b=1,n=None): # node list, przedzial [a,b), ilosc e
     return first.next
 
 
-def print_nodes(L,a=None): # sztczyny drugi parametr bo zwracam tupla w sorcie
+def print_nodes(L):
     while L is not None:
         print(L.value, end="->")
         L = L.next
