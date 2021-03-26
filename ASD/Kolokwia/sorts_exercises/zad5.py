@@ -13,7 +13,7 @@ def place_for_house(Arr):
     Arr.sort()
     half = len(Arr)//2
     if len(Arr)%2 == 0: # parzysta
-        return (Arr[half+1]-Arr[half-1])/2
+        return (Arr[half+1]-Arr[half-1])/2 + Arr[half-1]
     else:
         return Arr[n//2]
 
