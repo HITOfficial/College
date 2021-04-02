@@ -38,7 +38,7 @@ int uniqueArray(int *Arr, int n){
     while(i < n){
         uniqueArr[index] = sortedArr[i]; // dokladam i przeskakuje przez wszystkie powtorzenia
         i+= 1;
-        while(i < n-1 && sortedArr[i] == sortedArr[i-1]){
+        while(i < n && sortedArr[i] == sortedArr[i-1]){
             i += 1; // pomijam wszystkie kopie
         }
         index += 1;
