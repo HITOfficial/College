@@ -1,6 +1,6 @@
 # Rozwiazanie polega na znalezieniu wszystkich najdłuższych podciągów, i markowaniu ich w osobnej tablicy -> O(n^2)
 # liniowo szukam tych podciągów -> rozpakowywuje pierwszy znaleziony, zakończony na danym indexie, pozostałe zapamiętuje i zapisuje na stosie, który w indentyczny sposob odtwarzam 
-
+# Wydaje mi się że złożoność ALGO to O(n^2) -> wytlumaczylem w lini 49
 
 def printAllLIS(A):
     Arr = A # na referencji operuje na zmiennej Arr, bo sie do niej przyzwyczailem
@@ -45,6 +45,8 @@ def printAllLIS(A):
                         pivot = Arr[i]
                         Path[j] = Arr[i]
                         j -= 1 
+                    if j == -1: # gdy stack będzie O(n) to ścieżki będą max: O(2) -> więc nadrobi straty w złożoności nadmieniając O(n^3) -> O(n^2)
+                        break
                 print(Path)
-    return counter
 
+    return counter
