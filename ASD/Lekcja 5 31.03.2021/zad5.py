@@ -1,12 +1,12 @@
 # Rozwiazanie polega na znalezieniu wszystkich najdłuższych podciągów, i markowaniu ich w osobnej tablicy -> O(n^2)
 # następnie przy użyciu stosów odtwarzam najdłuższe ciągi
+
 A =[2,1,4,3,5,2,6]
 
-Paths_Stack = list() # w zmiennej globalnej będę zapisywał odtwarzane ścieżki
-
-def LIS(Arr,Pull,Path,index,maximum):
+# Potraktowałem wypisywanie podciągów danej długości, wypisując je w kolejności, w której zakańczają się jak najwcześniej w Tablicy wejściowej
+def LIS(Arr,Pull,Path,index,maximum): # Tablica, Długość podciągu na danym indexie, rozpratrywany pivot, długość jeszcze do odtworzenia
     if maximum == 1: # utworzyło już wszystkie możliwe podciągi o maxymalnej długości
-        Paths_Stack.append([*Path]) # ponieważ cały czas działam na referencji do tej samej tablicy, potrzebuje kopiować ich aktualny stan
+        print(Path) # wypisuje podciąg
         return 0
 
     counter = 0
@@ -45,10 +45,6 @@ def printAllLIS(A):
             Path = [None]*maximum
             Path[maximum-1]= Arr[index] # wrzucam ostatni element jako koniec LIS'a
             counter += LIS(Arr,Pull,Path,index,maximum)
-
-    for i in range(len(Paths_Stack)-1,-1,-1): # zwracam najdłuższe ciągi
-        print(Paths_Stack[i])
     return counter
-
 
 print(printAllLIS(A))
