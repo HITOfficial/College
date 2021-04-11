@@ -15,7 +15,8 @@ def get_solution(Arr,W,P,i,w):
 def knap_sack(W,P,max_W): # wagi, punkty(cena)
     n= len(W)
     Arr = [[0]*(max_W+1) for _ in range(n)]
-
+    for i in range(W[0],max_W+1): # żeby uwzględnić pierwszy przedmiot, a gdyby był za ciężki niż dopuszczalna waga, to ominie tą pętle
+        Arr[0][i] = P[0]
     for i in range(1,n):
         for w in range(1,max_W+1):
             Arr[i][w] = Arr[i-1][w] # ustawiam defaultowo poprzednika
