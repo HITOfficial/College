@@ -6,7 +6,9 @@ def subsequence_sum(A,k):
     Arr =[[False for _ in range(k+1)] for _ in range(n)]
     for i in range(1,n): # szukany podciag dajacy 0 zawsze mozliwy do stworzenia
         Arr[i][0] = True
-
+    if A[0] <= k: # uwzględniam pierwszy element
+        Arr[0][A[0]] = True
+        
     for i in range(1,n):
         for j in range(1,k+1):
             Arr[i][j] = Arr[i-1][j]
