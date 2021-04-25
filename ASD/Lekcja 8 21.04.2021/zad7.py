@@ -6,7 +6,7 @@ from collections import deque
 # złożoność pamięciowa O(n) -> tworze dwie tablicę jedną do zbudowania gałęzi w drzewie Huffmana, drugą jako odtworzenie ścieżki
 # zlozoność obliczeniowa O(nlog(n)) -> budowa całego drzewa, aż do korzenia, wbudowany sort, przy odtwarzaniu ścieżki
 
-# zaimplementowałem własną PriorityQueue a kożystam tylko z wbudowanej ogólnej koleiki
+# zaimplementowałem własną PriorityQueue a korzystam tylko z wbudowanej ogólnej koleiki
 
 class Huffman_symbol:
     def __init__(self, symbol="", amount="", main_index=0): # symbol, ilość wystąpień, index w tablicy wejściowej
