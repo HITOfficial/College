@@ -1,29 +1,38 @@
 from collections import deque
 
 
-# będę tworzył drzewo Huffmana na podstawie kopca min
+# zamysł: Tworzę drzewo Huffmana i na podstawie kopca minimum, zaimplementowanego na stosie, wyciągam po dwa najmniejsze elementy które scalam, i nakierowywuje na nie tymczasowego rodzica, następnie znaczę dzieci bitowo 0/1 i wykonuję tą samą operację aż pozostanie mi ostatni element na stosie
+# po zaznaczeniu bitowym wszystkich elementów odtwarzam wszystkie gałęzie drzewa, gromadząc  bity z gałęzi potrzebne na zapisanie każdego słowa
+# złożoność pamięciowa O(n) -> tworze dwie tablicę jedną do zbudowania gałęzi w drzewie Huffmana, drugą jako odtworzenie ścieżki
+# zlozoność obliczeniowa O(nlog(n)) -> budowa całego drzewa, aż do korzenia, wbudowany sort, przy odtwarzaniu ścieżki
+
+# zaimplementowałem własną PriorityQueue a kożystam tylko z wbudowanej ogólnej koleiki
 
 class Huffman_symbol:
-    def __init__(self, symbol="", amount=""): # symbol, ilość wystąpień, kod binarny, rodzic, dzieci
+    def __init__(self, symbol="", amount="", main_index=0): # symbol, ilość wystąpień, index w tablicy wejściowej
+        self.main_index = main_index
         self.childrens = []
         self.binary_digit = ""
         self.symbol = symbol
         self.amount = amount
 
 
-def symbol_as_object(symbol, amount): # konwertuje każdy symbol wraz z jego wystąpieniem na obiekt
-    return Huffman_symbol(symbol,amount)
+def symbol_as_object(symbol, amount,index): # konwertuje każdy symbol wraz z jego wystąpieniem na obiekt
+    return Huffman_symbol(symbol,amount, index)
 
 
 def return_elements(parent, binary_code=""): # zwracam kompresje bitową każdego symbolu, wraz z ilością bitów potrzebnych na zapisanie ich wszystkich
-    count_bits = 0
-    if len(parent.childrens) == 0: 
-        print(f"{parent.symbol} : {binary_code}{parent.binary_digit}")
-        count_bits += parent.amount * len(binary_code+parent.symbol)
+    count_bits = 0 # zbieram ilość bitów potrzebną na zapisanie słowa
+    indexes_array = []
+    if len(parent.childrens) == 0: # dochodzi do liścia z danej gałęzi
+        indexes_array.append([binary_code+parent.binary_digit, parent.main_index]) # wkładam element na stos, który następnie odtworzy ścieżkę, w kolejności danych na wejściu
+        count_bits += parent.amount * len(binary_code+parent.symbol) # zliczam bity potrzebne na zapisanie wszystkich tych samych symboli
     else:
         for children in parent.childrens:
-            count_bits += return_elements(children,binary_code+parent.binary_digit)
-    return count_bits
+            bits, indexes = return_elements(children,binary_code+parent.binary_digit)
+            count_bits += bits
+            indexes_array += indexes
+    return count_bits, indexes_array
 
 
 def heapyfy(T,n,i): # table, len(T), index rodzica
@@ -38,7 +47,7 @@ def heapyfy(T,n,i): # table, len(T), index rodzica
         heapyfy(T,len(T), i_copy) # szuka poddzieci do dzieci
 
 
-def build_heap(T,n): # Tworzymy sens kopca -> każdy rodzic ma mniejsze dzieci
+def build_heap(T,n): # Tworzymy sens kopca minimum -> każdy rodzic ma większe dzieci
     for i in range(((n//2)-1),-1,-1): # budowa kopca
         heapyfy(T,n,i)
 
@@ -53,11 +62,11 @@ def create_branch(stack):
     right.binary_digit = "0"
 
     parent = Huffman_symbol()
-    parent.childrens.append(left)
+    parent.childrens.append(left) # dodaję dzieci
     parent.childrens.append(right)
     parent.amount = left.amount+right.amount
     stack.append(parent) # usuwam dwójkę dzieci ze stosu i dodaję rodzica który będzie wskazywał na dzieci
-    heapyfy(stack,len(stack),((len(stack)-1)//2)-1)
+    build_heap(stack,len(stack)) # ponieważ dodaje element na koniec, musiał bym iteracyjnie przelecieć po wszystkich rodzicach, więc korzystam juz z zaimplementowanej budowy kopca
 
 
 def branches_tree(stack): # Tworzę gałęzie, kopcem min znajduję dwa najmniejsze elementy dla których tworzę rodzica
@@ -69,12 +78,18 @@ def branches_tree(stack): # Tworzę gałęzie, kopcem min znajduję dwa najmniej
 
 
 def huffman(S,F):
-    stack = deque([symbol_as_object(symbol, amount) for symbol, amount in zip(S,F)]) # Tworzę obiekty z każdego symbolu, oraz jego ilości wystąpień które będę przechowywał w minheap'ie i wyciągał po dwa elementy najmniejsze
-    build_heap(stack, len(stack))
+    stack = deque([symbol_as_object(symbol, amount, index) for symbol, amount, index in zip(S,F,range(len(S)))]) # Tworzę obiekty z każdego symbolu, oraz jego ilości wystąpień które będę przechowywał w minheap'ie i wyciągał po dwa elementy najmniejsze
+    build_heap(stack, len(stack)) # tworze kopiec min
     # wyciągam dwa najmniejsze elementy z kopca -> tworzę rodzica, i wrzucam do niego te elementy jako dzieci, rodzic elementów defaultowo będzie miał symbol pustego stringa więc będzie wporządku do odtwarzania
     first = branches_tree(stack)
-    return f"dlugosc napisu: {return_elements(first)}"
-
+    first
+    bits_sum, binary_code_arr = return_elements(first)
+    binary_code_arr.sort(key=lambda item: item[1]) # sortuje po indexach zeby odtworzyć w wejsciowej kolejnosci
+    for item in binary_code_arr: # 
+        print(f"{S[item[1]]} : {item[0]}")
+        
+    print(f"dlugosc napisu : {bits_sum}")
+    return ""
 
 S = ["a", "b", "c" ,"d", "e", "f"]
 F = [10 , 11 , 7 , 13, 1 , 20]
