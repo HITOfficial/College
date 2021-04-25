@@ -46,11 +46,11 @@ def build_heap(T,n): # Tworzymy sens kopca -> każdy rodzic ma mniejsze dzieci
 def create_branch(stack):
     heapyfy(stack,len(stack),0) # lewy bit
     left = stack.popleft()
-    left.binary_digit = "0" # ustawiam bitowo znak symbolu
+    left.binary_digit = "1" # ustawiam bitowo znak symbolu
 
     heapyfy(stack,len(stack),0) # prawy bit
     right = stack.popleft()
-    right.binary_digit = "1"
+    right.binary_digit = "0"
 
     parent = Huffman_symbol()
     parent.childrens.append(left)
