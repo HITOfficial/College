@@ -23,9 +23,9 @@ def refuelings_min_cost(stations ,prices ,distance_to_reach ,capacity ,fuel=None
 
     for i in range(1,n):
         for distance in range(1,distance_to_reach+1):
-            lowest_costs[i][distance] = lowest_costs[i-1][distance][:] # copy combination to staion
+            lowest_costs[i][distance] = lowest_costs[i-1][distance][:] # copy combination from stations[0-i]
             if distance > stations[i] and distance <= stations[i]+capacity:
-                tmp_cost = prices[i] * (capacity -(lowest_costs[i][stations[i]][1])) # filling to full in actual station
+                tmp_cost = prices[i] * (capacity -(lowest_costs[i][stations[i-1]][1])) + lowest_costs[i-1][stations[i]][0] # filling to full in actual station
                 tmp_fuel = capacity - (distance-stations[i]) # distance from last station
                 if tmp_cost < lowest_costs[i][distance][0]:
                     lowest_costs[i][distance] = [tmp_cost, tmp_fuel]
