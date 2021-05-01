@@ -18,13 +18,15 @@ g = [
 # I'll solve its using BFS alghoritm
 def bfs_messages(graph,vertex):
     got_msg = [False] * len(graph) # I'll mark used vertex
-    
+    best_day = -1
+    day = -1
     queue = Queue()
     queue.put(vertex)
     max_msg = 0
     people = []
 
     while queue.qsize() > 0:
+        day += 1
         count_msg = 0
         next_queue = Queue()
         tmp_people = [] # in this stack i'll merorize actual messages
@@ -44,8 +46,9 @@ def bfs_messages(graph,vertex):
         if max_msg < count_msg:
             max_msg = count_msg
             people = tmp_people.copy()
-            
-    return f"Messages: {max_msg}, People: {people}"
+            best_day = day
+
+    return f"Messages: {max_msg}, People: {people}, Day: {best_day}"
 
 
 print(bfs_messages(g,0))
