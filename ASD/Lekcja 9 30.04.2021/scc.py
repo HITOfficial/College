@@ -23,7 +23,6 @@ def SSC_components(graph_opposite,vertex,used):
     for neighbour in graph_opposite[vertex]:
         if used[neighbour] == False:
             components.extend(SSC_components(graph_opposite,neighbour,used))
-            break
     return components
 
 
