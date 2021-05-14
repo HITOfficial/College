@@ -30,11 +30,8 @@ def dfs_LIS(graph,LIS,vertex,time=1):
 
 
 def matryoshka_dolls(dolls):
-
     n = len(dolls)
     graph = [[ b for b in range(n) if is_edge(dolls[a],dolls[b]) and a != b] for a in range(n)]
-    print(graph)
-
     LIS = [0] * n # longest increasing subsequence nuber ending on every vertex
 
     for vertex in range(n):
