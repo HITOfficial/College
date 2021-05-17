@@ -30,14 +30,11 @@ def knasack_combinations(C,W,C_min,W_max): # Costs, Weights, minimum cost, maxim
                 if W[index] <= W_max and C[index] >=0: # can take this item
                     Arr[index][cost][weight] = max(Arr[index][cost][weight],1 + Arr[index][cost-C[index]][weight-W[index]])
     maximum = 0
-    tmp_tpl = (0,0)
     for cost in range(C_min,C_sum+1):
         for weight in range(W_max+1):
-            maximum_tmp = maximum
             maximum = max(maximum,Arr[-1][cost][weight])
-            if maximum_tmp != maximum:
-                tmp_tpl = (cost,weight)
-    return  maximum, tmp_tpl
+    return  maximum
+
 
 print(knasack_combinations(C,W,1,11))
     
