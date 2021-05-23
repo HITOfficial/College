@@ -1,6 +1,8 @@
 from queue import PriorityQueue
 
-# a little bit modyfied Djikstra algorithm
+# modyfied Djikstra algorithm
+# complexity: O(nlogn)
+# extra memory: O(n)
 
 g = [
     [(1,4),(3,3)],
@@ -36,13 +38,13 @@ def Prims_MST(graph,start=None): # graph, starting vertex
         nonlocal max_weight
         if flag:
             costs[end] = weight
-            costs_on_path[end] = (start,max_weight)
+            costs_on_path[end] = (start,end,max_weight)
             return True
         if costs[end] > costs[start] + weight:
             if costs[end] != float("inf"): # actual MST weight is cheaper
                 max_weight -= costs[end]
             max_weight += weight
-            costs_on_path[end] = (start,max_weight)
+            costs_on_path[end] = (start,end,max_weight)
             costs[end] = costs[start] + weight
             return True
         return False
@@ -54,7 +56,7 @@ def Prims_MST(graph,start=None): # graph, starting vertex
     n = len(graph)
     counter = len(graph)
     costs = [float("inf")] *n # cost to move from vertex start, to everty vertex
-    costs_on_path = [(0,float("inf"))] * n # tuple to see the path     
+    costs_on_path = [(0,0,float("inf"))] * n # tuple to see the path     
     p_queue = PriorityQueue()
     p_queue.put(PriorityEdge(start,start,max_weight))
     flag = True
@@ -71,8 +73,9 @@ def Prims_MST(graph,start=None): # graph, starting vertex
                 next_edge = PriorityEdge(start_vertex, end_vertex, weight)
                 p_queue.put(next_edge)
 
-    
-    return max_weight # weird abs, but works, becuse normaly I'll need a flag, to stor recursion
+    path = [(parent,children) for parent,children,_ in list(sorted(costs_on_path,key=lambda item: item[2]))]
+    path.pop(0)
+    return max_weight, *path # returning, weight to create MST, and path of vertex'es
 
 
 print(Prims_MST(g))
