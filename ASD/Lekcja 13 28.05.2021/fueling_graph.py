@@ -1,6 +1,6 @@
 from queue import PriorityQueue
 
-# complexity O(d*Elog(V*d))
+# complexity O(D*Elog(V*D))
 
 # -1 -> is not edge between a and b vertex
 # there are no negative edges
