@@ -33,7 +33,7 @@ def get_path(paths,u):
     return path
 
 
-def Belman_Ford_shortest_path(G,b,e): # graph begining vertex, last edge
+def Bellman_Ford_shortest_path(G,b,e): # graph begining vertex, last edge
     n = len(G)
     weights = [float("inf")] * n
     parents = [None] * n
@@ -44,11 +44,15 @@ def Belman_Ford_shortest_path(G,b,e): # graph begining vertex, last edge
             if relax(weights,u,v,w):
                 parents[v] = u
 
+
+    for u,v,w in E: # detecting negative cycle
+        if not (weights[v] <= weights[u] + w):
+            return False # detected negative cycle
+
     path = get_path(parents,e)
     path = [e] + path
     path.reverse()
 
     return weights[e],path
 
-    
-print(Belman_Ford_shortest_path(G,5,3))
+print(Bellman_Ford_shortest_path(G,5,3))
