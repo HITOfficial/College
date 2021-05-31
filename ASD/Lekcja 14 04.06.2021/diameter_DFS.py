@@ -1,7 +1,6 @@
-# finding ending vertexes from diameter in graph
-# Tree graph
-# not weighted graph
-# twice running DFS, looking like BFS, memorize max time vertexe, data reset and repeat once more
+# finding ending vertexes on diameter in graph
+# Tree of not weighted graph
+# twice running DFS, looking like BFS, memorize max time vertex, data reset and repeat once more
 
 # complexity:
 # -time O(V*V) -> matrix representation
