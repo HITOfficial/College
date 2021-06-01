@@ -24,7 +24,7 @@ def get_path(paths,begin,actual): # 2 dim paths array, recreating path from vert
     return path
 
 
-def Floyd_Warshall_shortest_paths(G,b,e):
+def Floyd_Warshall_shortest_paths(G):
     n = len(G)
     weights = [[0 if u == v else G[u][v] if G[u][v] != float("inf") else float("inf") for v in range(n)] for u in range(n)] # 0 the same vertex, edge weight, if is edge else inf
     parents = [[None if u == v else u if G[u][v] != float("inf") else None for v in range(n)] for u in range(n)]
@@ -42,4 +42,4 @@ def Floyd_Warshall_shortest_paths(G,b,e):
         print(f"from: {i//n} to: {i%n} total weight: {weights[i//n][i%n]} path: {path}") 
     return ""
 
-print(Floyd_Warshall_shortest_paths(G,6,2))
+print(Floyd_Warshall_shortest_paths(G))
