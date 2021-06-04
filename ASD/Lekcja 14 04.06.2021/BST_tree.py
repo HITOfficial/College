@@ -45,6 +45,7 @@ def maximum(actual):
     else:
         return actual
 
+
 def previous(actual,key):
     actual = find(actual,key)
     if actual is not None: # this element is in set
@@ -70,6 +71,72 @@ def next(root, key): # root from tree, next element of key
             return actual.parent
 
 
+def delete(root,key): # deleting node, not replecing values
+    actual = find(root,key)
+    if not actual.left and not actual.right: # single leaf
+        if actual.parent is not None:
+            if actual.parent.left is actual:
+                actual.parent.left = None 
+            else:
+                actual.parent.right = None
+        return None # empty tree
+
+    elif actual.left and not actual.right: # node has only left branch
+        if actual.parent is not None:
+            actual.left.parent = actual.parent
+            if actual.parent.left is actual:
+                actual.parent.left = actual.left
+            else:
+                actual.parent.right = actual.left
+        else: # removing root
+            actual.left.parent = None
+        return actual.left
+
+    elif actual.right and not actual.left: # only right branch
+        if actual.parent is not None:
+            actual.right.parent = actual.parent
+            if actual.parent.left is actual: # element to remove is a left branch of parent
+                actual.parent.left = actual.right
+            else:
+                actual.parent.right = actual.right
+        else:
+            actual.right.parent = None # removing root element
+        return actual.right
+
+    else: # actual element has two two branches
+        new = next(actual,actual.key) # searching for next value element in tree
+        parent = actual.parent
+        if actual.parent is not None: # not single element in branch
+            if parent.left is actual: # element to remove is a left children
+                parent.left = new
+            else:
+                parent.right = new
+
+            new.left = actual.left # replacing branches from actual to new node
+            if actual.right is not new: # element with next value in BST was not from single leaf
+                new.parent.left = None # removing previous parent from next elemnt in BST
+                new.right = actual.right
+                actual.right.parent = new
+            new.parent = actual.parent # new parent
+            return root
+
+        else: # deleting element is a root in BST
+            new.parent.left = None
+            new.left = actual.left
+            new.right = actual.right
+            return new 
+
+
+def BST_keys(actual):
+    if actual is None:
+        return []
+    else:
+        array = [actual.key]
+        array.extend(BST_keys(actual.left))
+        array.extend(BST_keys(actual.right))
+        return array
+
+
 root = BST_Node(21)
 insert(root,15)
 insert(root,5)
@@ -82,6 +149,10 @@ insert(root,25)
 insert(root,22)
 insert(root,40)
 insert(root,38)
+insert(root,28)
 
+root = delete(root,21)
+x = find(root,37)
 
-print(previous(root,20).key)
+print(BST_keys(root))
+print(BST_keys(x))
