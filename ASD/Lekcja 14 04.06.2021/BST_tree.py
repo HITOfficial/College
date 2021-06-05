@@ -73,6 +73,8 @@ def next(root, key): # root from tree, next element of key
 
 def delete(root,key): # deleting node, not replecing values
     actual = find(root,key)
+    if actual is None: # element to remove wasn't in tree
+        return
     if not actual.left and not actual.right: # single leaf
         if actual.parent is not None:
             if actual.parent.left is actual:
@@ -90,7 +92,10 @@ def delete(root,key): # deleting node, not replecing values
                 actual.parent.right = actual.left
         else: # removing root
             actual.left.parent = None
-        return actual.left
+        if actual is root:
+            return actual.left
+        else:
+            return root
 
     elif actual.right and not actual.left: # only right branch
         if actual.parent is not None:
@@ -101,7 +106,10 @@ def delete(root,key): # deleting node, not replecing values
                 actual.parent.right = actual.right
         else:
             actual.right.parent = None # removing root element
-        return actual.right
+        if actual is root:
+            return actual.right
+        else:
+            return root
 
     else: # actual element has two two branches
         new = next(actual,actual.key) # searching for next value element in tree
@@ -117,29 +125,36 @@ def delete(root,key): # deleting node, not replecing values
                 new.parent.left = None # removing previous parent from next elemnt in BST
                 new.right = actual.right
                 actual.right.parent = new
-            new.parent = actual.parent # new parent
+            new.parent = actual.parent # new parents
             return root
 
         else: # deleting element is a root in BST
-            new.parent.left = None
-            new.left = actual.left
-            new.right = actual.right
+            # replacing  new node to be a root of BST
+            new.left = actual.left # connecting left node
+            new.left.parent = new
+            if actual.right is not new: # right node
+                new.right = actual.right
+                new.parent.left = None
+            new.parent = None
             return new 
 
 
-def BST_keys(actual):
+def BST_keys(actual): # returning array of ascending keys
     if actual is None:
         return []
     else:
-        array = [actual.key]
-        array.extend(BST_keys(actual.left))
+        array = BST_keys(actual.left)
+        array.append(actual.key)
         array.extend(BST_keys(actual.right))
         return array
 
 
 root = BST_Node(21)
-insert(root,15)
+insert(root,27)
 insert(root,5)
+insert(root,6)
+insert(root,4)
+insert(root,29)
 insert(root,7)
 insert(root,13)
 insert(root,8)
@@ -151,7 +166,7 @@ insert(root,40)
 insert(root,38)
 insert(root,28)
 
-root = delete(root,21)
+root = delete(root,5)
 x = find(root,37)
 
 print(BST_keys(root))
