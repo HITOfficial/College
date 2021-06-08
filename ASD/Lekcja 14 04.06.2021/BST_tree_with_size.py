@@ -7,7 +7,6 @@ class BSTNode():
         self.size = 1
 
 
-
 def find(actual,key):
     if actual is None:
         return None
@@ -36,8 +35,14 @@ def insert(actual,key):
             actual.right = BSTNode(key,actual)
             # while will insert new element should everty time update size of parent node
             update_size(actual) # updating all parents
-    
 
+
+def update_size(actual): # after insert element updating all parents size by 1
+if actual is not None:
+    actual.size += 1
+    update_size(actual.parent)
+
+   
 def minimum(actual):
     if actual.left is not None:
         return minimum(actual.left)
@@ -143,9 +148,3 @@ def delete(root,key): # deleting node, not replecing values
                 new.parent.left = None
             new.parent = None
             return new
-
-
-def update_size(actual): # after insert element updating all parents size by 1
-    if actual is not None:
-        actual.size += 1
-        update_size(actual.parent)
