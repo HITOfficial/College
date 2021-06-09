@@ -16,7 +16,7 @@ def get_matches(Graph,path): # geting path of matched edges
 
 # G(x) = Sum(max(F(i),G(i)))+ edge weight, where is child of x element <- including edge to G element
 def G(Graph,f,g,path,actual): # including edge to children
-    best_variant = None, 0, None, None, None # index, best value, including edge weight, prev_children, prev_parent
+    best_variant = None, 0, None, None, None # index, best value, including edge weight, parent, children from removed path
     # need to find best children vertex option to match new edge, so twice runing for loop for childrens to find best variant
     for i,weight in Graph[actual]:
         if best_variant[1] <= g[i] and weight + f[i] > g[i]:
