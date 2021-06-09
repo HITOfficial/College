@@ -12,7 +12,6 @@ def get_path(path,actual,transport):
     if next_transport is not None:
         p.append(parent)
         p.extend(get_path(path, parent ,next_transport))
-
     return p
 
 
