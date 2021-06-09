@@ -1,5 +1,5 @@
-from collections import deque
 # finding maximum matching in tree, using dynamic programing
+from collections import deque
 # on every vertex can be maximum only one edge
 
 # complexity:
@@ -16,15 +16,18 @@ def get_matches(Graph,path): # geting path of matched edges
 
 # G(x) = Sum(max(F(i),G(i)))+ edge weight, where is child of x element <- including edge to G element
 def G(Graph,f,g,path,actual): # including edge to children
-    best_variant = None, 0, 0 # index, best value, including edge weight
+    best_variant = None, 0, None, None, None # index, best value, including edge weight, prev_children, prev_parent
     # need to find best children vertex option to match new edge, so twice runing for loop for childrens to find best variant
     for i,weight in Graph[actual]:
         if best_variant[1] <= g[i] and weight + f[i] > g[i]:
+            if best_variant[3] is not None:
+                path[best_variant[3]] = best_variant[4]
             if best_variant[0] is not None: # found better option so need to change            
                 g[actual] -= best_variant[2]
             path[actual] = i
-            best_variant = i, weight + f[i], weight
+            best_variant = i, weight + f[i], weight, i, path[i]
             g[actual] += weight + f[i]
+            path[i] = None
         else:
             g[actual] += g[i]
 
