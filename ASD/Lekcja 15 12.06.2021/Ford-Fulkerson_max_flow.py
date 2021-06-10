@@ -8,16 +8,6 @@ from queue import Queue
 # -memory O(V^2)
 
 # BFS O(V*2) on matrix adjacency
-
-Graph = [
-    [0,5,4,0,0],
-    [0,0,2,0,2],
-    [0,0,0,2,3],
-    [0,0,0,0,2],
-    [0,0,0,0,0],
-]
-
-
 def bfs(Graph,b,e,parent):
     n = len(Graph)
     visited = [False] * n
@@ -62,5 +52,12 @@ def Ford_Fulkerson_max_flow(Graph, source, sink): # graph matrix adjacency, sour
     return max_flow
 
 
+Graph = [
+    [0,5,4,0,0],
+    [0,0,2,0,2],
+    [0,0,0,2,3],
+    [0,0,0,0,2],
+    [0,0,0,0,0],
+]
 
 print(Ford_Fulkerson_max_flow(Graph,0,4))
