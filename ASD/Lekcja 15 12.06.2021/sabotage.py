@@ -1,4 +1,4 @@
-# Finding max flow in flow network, and edges to remove
+# Finding max flow in flow network, and edges to remove to get min cut
 # to run this, need to see Edmonds_Karp_max_flow.py from same folder 
 from Edmonds_Karp_max_flow import *
 from queue import Queue
@@ -9,7 +9,7 @@ from queue import Queue
 # Interesuje nas nie tylko koszt, ale które konkretnie linie telegraficzne mamy zniszczyć.
 
 # complexity:
-# -time O(V^2*E)
+# -time O(V*E^2)
 # -memory O(V^2)
 
 
