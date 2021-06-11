@@ -35,7 +35,7 @@ def bfs_min_flow(graph,parents,b,e,min_flow):
         return False
 
 
-def Edmonds_Karm_max_flow(graph,source,sink):
+def Edmonds_Karp_max_flow(graph,source,sink):
     n = len(graph)
     max_flow = 0
     parents = [None] * n
@@ -65,4 +65,4 @@ graph = [
     [0,0,0,0,0,0,0,0],
 ]
 
-print(Edmonds_Karm_max_flow(graph,0,7))
+print(Edmonds_Karp_max_flow(graph,0,7))
