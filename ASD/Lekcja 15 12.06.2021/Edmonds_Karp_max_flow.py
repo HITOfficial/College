@@ -2,7 +2,7 @@
 from queue import Queue
 
 # complexity:
-# -time O(V^2*E)
+# -time O(V*E^2)
 # -memory O(V^2)
 
 
@@ -51,7 +51,6 @@ def Edmonds_Karp_max_flow(graph,source,sink):
         new_flow.flow = float("inf") # reset of flow, to next BFS run
 
     return max_flow
-
 
 
 graph = [
