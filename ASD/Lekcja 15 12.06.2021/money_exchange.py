@@ -7,7 +7,7 @@
 # 2. n times Bellman Ford algorithm, to for all combinations
 
 # complexity:
-# -time O(V^2*E) # Bellman-Ford on all vertices 
+# -time O(V^3*E) # Bellman-Ford on all vertices 
 # -memory O(V)
 
 
