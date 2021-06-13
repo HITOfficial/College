@@ -8,9 +8,9 @@
 # W reprezentacji przyjętej w zadaniu mógłby być zapisany jako: # 0 1 2 3 4 5 L = ["k","k","o","o","t","t"] E = [(0,2,2), (1,2,1), (1,4,3), (1,3,2), (2,4,5), (3,4,1), (3,5,3) ] G = (E,L) 
 # Rozwiązaniem dla tego grafu i słowa W = "kto" jest 4 i jest osiągane przez ścieżkę 1 − 4 − 3. Inna ścieżka realizująca to słowo to 1 − 4 − 2, ale ma koszt 8.
 from queue import PriorityQueue
-
+from copy import deepcopy
 # complexity:
-# -time O(K*VlogE) where K is a number of vertices that start W word
+# -time O(K*VlogE) where K is is number of verices from word
 # -memory O(V)
 
 
@@ -24,30 +24,30 @@ def list_adjacency(E,n):
 
 # mix of Dijkstra and Prims MST algorithm
 def Dijkstra_Prims_word(graph,L,letters,remaing,start): # graphm list adjacenct, dictionary of letters, letters array, letters left to find, starting vertex
-    # "ot" neet to be find
     p_queue = PriorityQueue()
     distances = [float("inf")] * len(graph)
     distances[start] = 0
     for children, weight in graph[start]:
         if letters[ord(L[children])] > 0: # need to find this letter
-            p_queue.put((start,children, weight))
+            p_queue.put((weight, start, children))
 
-    edges = [(start,start,0)]
+    edges = [(0,start,start)]
 
     while not p_queue.empty() and remaing > 0:
-        b,e,w = p_queue.get()
+        w,b,e = p_queue.get()
         if letters[ord(L[e])] > 0 and distances[e] > distances[b] + w: # need to take this letter, and distance can be reduced
             remaing -= 1
             letters[ord(L[e])] -= 1 # reducing letters to find
-            edges.append((b,e,w)) # memorizing edge
+            edges.append((w,b,e)) # memorizing edge
+            distances[e] = distances[b] + w
             for children,weight in graph[e]:
                 if letters[ord(L[children])] > 0 and children != b: # need to take this letter
-                    p_queue.put((e,children,weight))
+                    p_queue.put((weight,e,children))
 
     if remaing > 0: # doesnt found a path
         return float("inf"), []
     else:
-        return sum([weight for _, _, weight in edges]), [vertex for _ ,vertex ,_ in edges]
+        return sum([weight for  weight, _, _ in edges]), [vertex for _, _, vertex in edges]
 
 
 def MST_word(G,W):
@@ -60,23 +60,26 @@ def MST_word(G,W):
     remaing_letters = [0] * 128 # ASCI symbols
 
     # memorizing on which vertices can start letter
-    for number, _, _ in E:
-        ASCI_array[ord(L[number])].append(number)
-        ASCI_array[ord(L[number])] = list(set(ASCI_array[ord(L[number])])) # removing eventual copies of every vertices
+    for number1, number2, _ in E:
+        ASCI_array[ord(L[number1])].append(number1)
+        ASCI_array[ord(L[number2])].append(number2)
+        ASCI_array[ord(L[number1])] = list(set(ASCI_array[ord(L[number1])])) # removing eventual copies of every vertices
+        ASCI_array[ord(L[number2])] = list(set(ASCI_array[ord(L[number2])])) # removing eventual copies of every vertices
     for letter in W:
         remaing_letters[ord(letter)] += 1 # memorizing which letters need to be find
 
     lowest_distance, best_path = float("inf"), []
     graph = list_adjacency(G[0],n)
-    
-    for start in ASCI_array[ord(W[0])]: # running mixed Dijkstra from vertices on which in a starting letter of word
-        letters = remaing_letters.copy()
-        remaing = len(W) - 1        
-        letters[ord(W[0])] -= 1 # reducing first letter
-        distance, path = Dijkstra_Prims_word(graph,L,letters,remaing,start)
-        if distance < lowest_distance:
-            lowest_distance = distance
-            best_path = path
+
+    for letter in W:
+        for start in ASCI_array[ord(letter)]: # starting Dijkstra from every vertices letter from word
+            letters = deepcopy(remaing_letters)
+            remaing = len(W) - 1        
+            letters[ord(letter)] -= 1 # reducing first letter
+            distance, path = Dijkstra_Prims_word(graph,L,letters,remaing,start)
+            if distance < lowest_distance:
+                lowest_distance = distance
+                best_path = path
 
     if lowest_distance != float("inf"):
         return lowest_distance, best_path
@@ -84,11 +87,10 @@ def MST_word(G,W):
         return -1
 
 
-# A bit Greedy Algorithm doesnt not always correctly, for "koto" will return 6 [1,2,3,4], when 5 is correct answer [1,2,4,3]
 L = ["k","k","o","o","t","t"]
 E = [(0,2,2),(1,2,1),(1,4,3),(1,3,2),(2,4,5),(3,4,1),(3,5,3)]
 G = (E,L)
 W = "kto"
-    
-print(MST_word(G,"kto"))
+
+print(MST_word(G,W))
 
