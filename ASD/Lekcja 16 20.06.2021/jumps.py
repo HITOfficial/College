@@ -51,7 +51,7 @@ def construct_graph(array,n):
     return graph
         
 
-def jupms(array):
+def jumps(array):
     n = len(array)
     max_index = np.argmax(array)
     min_index = np.argmin(array)
@@ -91,5 +91,5 @@ def jupms(array):
 T1 = [123,890,688,587,257,246]
 T2 = [587,990,257,246,668,132]
 
-print(jupms(T1))
-print(jupms(T2))
+print(jumps(T1))
+print(jumps(T2))
