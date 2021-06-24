@@ -1,3 +1,5 @@
+from collections import deque
+
 # complexity:
 # -time O(k!), where k is number of equal digits -> 256*k!
 # -memory O(k) -> 256*k
@@ -38,10 +40,6 @@ def memorize_positions(array,word):
         array[ord(letter)].append(index)
 
 
-x = "kotomysz"
-y = "tokmysoz"
-
-
 def tanagram(x, y, t):
     # return False
     # cannot be anagrams if have different lengths
@@ -70,6 +68,36 @@ def tanagram(x, y, t):
                 return False
     return True
 
+
+# second solution idea from other students
+
+#complexity:
+# -time O(N)
+# -memory O(N)
+
+
+def insert_letters_indexes(word,array):
+    for letter, index in zip(word,range(len(word))):
+        array[ord(letter)-97].append(index)
+
+
+def tanagram2(x,y,t):
+    # if length of words is different, words can not be anagrams 
+    if len(x) != len(y):
+        return False
+    # Latin alphabet has 26 letters
+    y_positions = [deque() for _ in range(26)]
+    # memorizing indexes from letters in Y word
+    insert_letters_indexes(y,y_positions)
+    for letter, x_index in zip(x,range(len(x))):
+        y_index = y_positions[ord(letter)-97].popleft()
+        # checking if indexes difference is lower than t
+        if abs(x_index-y_index) > t:
+            return False
+    return True
+
+
+
 x3 = "abaabababaaaababaaaaabaabba"
 y3 = "baaaababbaaaaabbaaaabaabaab"
 r3 = 1
@@ -82,6 +110,12 @@ x6 = "darjeeling"
 y6 = "darjeeling"
 r6 = 0
 
+print("first alg")
 print(tanagram(x3,y3,r3))
 print(tanagram(x5,y5,r5))
 print(tanagram(x6,y6,r6))
+
+print("second alg")
+print(tanagram2(x3,y3,r3))
+print(tanagram2(x5,y5,r5))
+print(tanagram2(x6,y6,r6))
