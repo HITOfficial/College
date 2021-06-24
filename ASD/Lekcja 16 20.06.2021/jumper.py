@@ -6,6 +6,17 @@ from queue import PriorityQueue
 # -time O(V^3logV)
 # -memory O(V) -> 4*V
 
+def get_path(paths,actual,way,between):
+    path = []
+    # inserting vertex between double edge
+    if between is not None:
+        path.append(between)
+    if actual is not None:
+        path.append(actual)
+        new_actual, new_way, new_between = paths[actual][way]
+        path.extend(get_path(paths,new_actual,new_way,new_between))
+    return path
+
 
 # function to insert edges to queue distanced apart 2 edges
 def insert_neighbours(graph,n,p_queue,prev,b):
@@ -19,9 +30,11 @@ def jumper(G, s, w):
     # creating extra connections of weight max from two edges and marking up them
     # two ways of distance, first ended on single step second from extra edge
     graph = G
+    # distance: single edge (lowest distance, number of used edges), double edge (lowest distance, number of used edges)
     distances = [[(float("inf"),float("inf")),(float("inf"),float("inf"))] for _ in range(n)]
-    paths = [[]*2 for _ in range(n)]
-    # two flags as 4th parameter: 0 previous jump was by 1 edge, 1 previous jump by 2 edges
+    # to recreate path, need to have fields previus vertex, which case, extra vertex between on bouble edges
+    paths = [[(None,None,None),(None,None,None)] for _ in range(n)]
+    # two flags as 4th parameter: 0 previous jump was by 1 edge, 1 previous jump by 2 edges jumps
     p_queue = PriorityQueue()
     distances[s] = ((0,0),(0,0))
     # instering neigbours of starting vertex, and vertices which are neighbours, of neigbour
@@ -35,13 +48,15 @@ def jumper(G, s, w):
             insert_neighbours(graph,n,p_queue,s,i)
 
     while not p_queue.empty():
-        d,b,e,prev,flag = p_queue.get()
+        d,b,e,between,flag = p_queue.get()
 
         # single edge relax
         if flag == 0:
             # relaxing edge: one step previus lower distance or less used edges
             if distances[e][0][0] > distances[b][0][0]+d or (distances[e][0][0] == distances[b][0][0]+d and distances[e][0][1] > distances[b][0][1]+1):
                 distances[e][0] = distances[b][0][0]+d, distances[b][0][1]+1
+                # single edge
+                paths[e][0] = b,0,None
                 # inserting double edge vertexes to priority queue
                 for end in range(n):
                     if graph[e][end] != 0 and end != b:
@@ -51,6 +66,8 @@ def jumper(G, s, w):
             # relaxing edge: relaxing using 2 edges step on previous
             if distances[e][0][0] > distances[b][1][0]+d or (distances[e][0][0] == distances[b][1][0]+d and distances[e][0][1] > distances[b][1][1]+1):
                 distances[e][0] = distances[b][1][0]+d, distances[b][1][1]+1
+                # on path need to look on double edge parent
+                paths[e][0] = b,1,None
                 for end in range(n):
                     if graph[e][end] != 0 and end != b:
                         p_queue.put((graph[e][end],e,end,b,0))
@@ -60,13 +77,25 @@ def jumper(G, s, w):
         else:
             if distances[e][1][0] > distances[b][0][0]+d or (distances[e][1][0] == distances[b][0][0]+d and distances[e][0][1] > distances[b][0][1]+2):
                 distances[e][1] = distances[b][0][0]+d, distances[b][0][1]+2
-                paths[e]
+                # need to memorize vertex between double edge
+                paths[e][1] = b,0,between
                 for end in range(n):
                     # inserting single edges to queue
                     if graph[e][end] != 0 and end != b:
                         p_queue.put((graph[e][end],e,end,b,0))
 
-    return min(dist for dist, _ in distances[w])
+    # taking best option to get into ending vertex in path
+    distance, edges_number = distances[w][0]
+    actual,way,between = paths[w][0]
+    # checking if better option is taking taking double edge to get into ending edge - lower distance, or less used edges
+    if distances[w][1][0] < distance or (distances[w][1][0] == distance and distances[w][1][1] < edges_number):
+        actual,way,between = paths[w][1]
+        distance, edges_number = distances[w][1]
+        
+    path = list(reversed(get_path(paths,actual,way,between)))
+    path.append(w)
+    # returning distance to vertex, number of edges, path to get into
+    return distance,edges_number, path
 
 
 graph = [
