@@ -1,9 +1,9 @@
 from collections import deque
 
-# Topological sort on DAG matrix adjacency graph
+# Topological sort on DAG list adjacency graph
 
 # complexity:
-# -time O(V^2)
+# -time O(V+E)
 # -memory O(V)
 
 
