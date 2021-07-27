@@ -34,19 +34,6 @@ def lowest(graph, n, times, low, u, prev):
             low[u] = min(low[u], low[v])
 
 
-# DFS alg to check if graph is an acyclic tree
-def acyclic_tree(graph, n, visited, u, prev):
-    visited[u] = True
-    for v in range(n):
-        if graph[u][v] == 1 and v != prev:
-            # graph has a cycle
-            if visited[v] is True:
-                return False
-            else:
-                return acyclic_tree(graph, n, visited, v, u)
-    return True
-
-
 def find_articulation_points(graph, n, low, d):
     p = []
     for u in range(n):
@@ -58,14 +45,10 @@ def find_articulation_points(graph, n, low, d):
                 break
         if flag is True:
             p.append(u)
-    # checking if is a root of acyclic tree, becouse if is not, need to remove first added element
-    visited = [False]*n
-    # graph has a cycle so is not acyclic
+    # vertex is a root element and have at least 2 childrens
     first_vertex_sum = sum(graph[0])
-    # negation of is a acyclic graph (tree) and have at least two childrens
-    if not (acyclic_tree(graph, n, visited, 0, 0) is True and first_vertex_sum > 2):
-        if len(p) > 0:
-            p.pop(0)
+    if first_vertex_sum < 2:
+        p.pop(0)
     return p
 
 
@@ -101,5 +84,24 @@ graph2 = [[0, 0, 0, 1, 0, 0, 0],
           [0, 0, 1, 0, 0, 0, 1],
           [0, 0, 0, 1, 1, 1, 0]]
 
+graph3 = [
+    [0, 1, 1, 1, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 1, 1, 1],
+    [0, 0, 0, 1, 0, 1, 1],
+    [0, 0, 0, 1, 1, 0, 1],
+    [0, 0, 0, 1, 1, 1, 0],
+]
+
+graph4 = [
+    [0, 1, 1, 1],
+    [1, 0, 1, 0],
+    [1, 1, 0, 1],
+    [1, 0, 0, 0],
+]
+
 print(articulation_points(graph1))
 print(articulation_points(graph2))
+print(articulation_points(graph3))
+print(articulation_points(graph4))
