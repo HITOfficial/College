@@ -4,7 +4,7 @@
 # - or actual vertex is not a root element, but have a children which low number is lower or equal actual executing element
 
 # complexity:
-# - time O(V^2)
+# - time O(V+E)
 # - space O(v)
 
 
@@ -17,18 +17,18 @@ class Time:
 def DFS(graph, times, n, time, u):
     time.time += 1
     times[u] = time.time
-    for v in range(n):
+    for v in graph2[u]:
         # checking if is edge between vertices and new vertex wasn't visited before
-        if graph[u][v] != 0 and times[v] == float("inf"):
+        if times[v] == float("inf"):
             DFS(graph, times, n, time, v)
 
 
 # modyfied DFS
 def lowest(graph, n, times, low, u, prev):
     low[u] = min(low[u], times[u])
-    for v in range(n):
+    for v in graph[u]:
         # vertex wasn't executed before and cannot backtrack to previous vertex from DFS
-        if graph[u][v] == 1 and v != prev and low[v] == float("inf"):
+        if v != prev and low[v] == float("inf"):
             lowest(graph, n, times, low, v, u)
             low[u] = min(low[u], low[v])
 
@@ -37,7 +37,7 @@ def lowest(graph, n, times, low, u, prev):
 def acyclic_tree(graph, n, visited, u, prev):
     visited[u] = True
     for v in range(n):
-        if graph[u][v] == 1 and v != prev:
+        if v != prev:
             # graph has a cycle
             if visited[v] is True:
                 return False
@@ -50,9 +50,9 @@ def find_articulation_points(graph, n, low, d):
     p = []
     for u in range(n):
         flag = False
-        for v in range(n):
+        for v in graph[u]:
             # checking if parent vertex is an articulation point
-            if graph[u][v] == 1 and d[u] <= low[v]:
+            if d[u] <= low[v]:
                 flag = True
                 break
         if flag is True:
@@ -82,22 +82,24 @@ def articulation_points(graph, u=0):
 
 # Tests:
 graph1 = [
-    [0, 1, 0, 1, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0],
-    [0, 1, 0, 1, 0, 0, 0],
-    [1, 0, 1, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0, 1, 1],
-    [0, 0, 0, 0, 1, 0, 1],
-    [0, 0, 0, 0, 1, 1, 0],
+    [1, 3],
+    [0, 2],
+    [1, 3],
+    [0, 2, 4],
+    [3, 5, 6],
+    [4, 6],
+    [4, 5],
 ]
 
-graph2 = [[0, 0, 0, 1, 0, 0, 0],
-          [0, 0, 0, 0, 1, 0, 0],
-          [0, 0, 0, 0, 0, 1, 0],
-          [1, 0, 0, 0, 0, 0, 1],
-          [0, 1, 0, 0, 0, 0, 1],
-          [0, 0, 1, 0, 0, 0, 1],
-          [0, 0, 0, 1, 1, 1, 0]]
+graph2 = [
+    [3],
+    [4],
+    [5],
+    [0, 6],
+    [1, 6],
+    [2, 6],
+    [3, 4, 5],
+]
 
 print(articulation_points(graph1))
 print(articulation_points(graph2))
