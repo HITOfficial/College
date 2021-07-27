@@ -30,6 +30,7 @@ def lowest(graph, n, times, low, u, prev):
         # vertex wasn't executed before and cannot backtrack to previous vertex from DFS
         if graph[u][v] == 1 and v != prev and low[v] == float("inf"):
             lowest(graph, n, times, low, v, u)
+        if graph[u][v] == 1 and v != prev:
             low[u] = min(low[u], low[v])
 
 
@@ -60,9 +61,9 @@ def find_articulation_points(graph, n, low, d):
     # checking if is a root of acyclic tree, becouse if is not, need to remove first added element
     visited = [False]*n
     # graph has a cycle so is not acyclic
-    x = sum(graph[0])
+    first_vertex_sum = sum(graph[0])
     # negation of is a acyclic graph (tree) and have at least two childrens
-    if acyclic_tree(graph, n, visited, 0, 0) is True and x < 2:
+    if acyclic_tree(graph, n, visited, 0, 0) is True and first_vertex_sum < 2:
         if len(p) > 0:
             p.pop(0)
     return p
@@ -77,6 +78,7 @@ def articulation_points(graph, u=0):
     DFS(graph, d, n, time, u)
     # modyfied DFS, finding candidates to articular points
     lowest(graph, n, d, low, u, u)
+    # returning a list of articulating points
     return find_articulation_points(graph, n, low, d)
 
 

@@ -14,35 +14,36 @@ class Time:
 
 
 # DFS alg.
-def DFS(graph, times, n, time, u):
+def DFS(graph, times, time, u):
     time.time += 1
     times[u] = time.time
-    for v in graph2[u]:
+    for v in graph[u]:
         # checking if is edge between vertices and new vertex wasn't visited before
         if times[v] == float("inf"):
-            DFS(graph, times, n, time, v)
+            DFS(graph, times, time, v)
 
 
 # modyfied DFS
-def lowest(graph, n, times, low, u, prev):
+def lowest(graph, times, low, u, prev):
     low[u] = min(low[u], times[u])
     for v in graph[u]:
         # vertex wasn't executed before and cannot backtrack to previous vertex from DFS
         if v != prev and low[v] == float("inf"):
-            lowest(graph, n, times, low, v, u)
+            lowest(graph, times, low, v, u)
+        if v != prev:
             low[u] = min(low[u], low[v])
 
 
 # DFS alg to check if graph is an acyclic tree
-def acyclic_tree(graph, n, visited, u, prev):
+def acyclic_tree(graph, visited, u, prev):
     visited[u] = True
-    for v in range(n):
+    for v in graph[u]:
         if v != prev:
             # graph has a cycle
             if visited[v] is True:
                 return False
             else:
-                return acyclic_tree(graph, n, visited, v, u)
+                return acyclic_tree(graph, visited, v, u)
     return True
 
 
@@ -60,9 +61,9 @@ def find_articulation_points(graph, n, low, d):
     # checking if is a root of acyclic tree, becouse if is not, need to remove first added element
     visited = [False]*n
     # graph has a cycle so is not acyclic
-    x = sum(graph[0])
+    first_vertex_sum = len(graph[0])
     # negation of is a acyclic graph (tree) and have at least two childrens
-    if acyclic_tree(graph, n, visited, 0, 0) is True and x < 2:
+    if acyclic_tree(graph, visited, 0, 0) is True and first_vertex_sum < 2:
         if len(p) > 0:
             p.pop(0)
     return p
@@ -74,9 +75,10 @@ def articulation_points(graph, u=0):
     low = [float("inf")]*n
     time = Time()
     # DFS executing times
-    DFS(graph, d, n, time, u)
+    DFS(graph, d, time, u)
     # modyfied DFS, finding candidates to articular points
-    lowest(graph, n, d, low, u, u)
+    lowest(graph, d, low, u, u)
+    # returning a list of articulating points
     return find_articulation_points(graph, n, low, d)
 
 
