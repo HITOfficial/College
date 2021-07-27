@@ -63,7 +63,7 @@ def find_articulation_points(graph, n, low, d):
     # graph has a cycle so is not acyclic
     first_vertex_sum = sum(graph[0])
     # negation of is a acyclic graph (tree) and have at least two childrens
-    if acyclic_tree(graph, n, visited, 0, 0) is True and first_vertex_sum < 2:
+    if not (acyclic_tree(graph, n, visited, 0, 0) is True and first_vertex_sum > 2):
         if len(p) > 0:
             p.pop(0)
     return p
