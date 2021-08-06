@@ -4,7 +4,6 @@
 # x i y oblicza ścieżkę o najmniejszej sumie wag, która prowadzi z x do y po krawędziach o malejących wagach
 # (jeśli ścieżki nie ma to zwracamy ∞
 from queue import PriorityQueue
-import queue
 
 # complexity:
 # -time O(ElogV)
@@ -30,7 +29,8 @@ def monotonic_path(graph, b, e):
     # sorting each edges by weight
     for i in range(n):
         graph[i].sort(key=lambda element:  element[1])
-    # tmp shortest distance to get into destination is equal inf
+    # marking up, that every vertex can be processed only once
+    processed = [False]*n
     total_distance = float("inf")
     p_queue = PriorityQueue()
     # adding best distance to get into begining
@@ -41,12 +41,15 @@ def monotonic_path(graph, b, e):
         if u == e:
             total_distance = min(total_distance, tmp_dist)
         # all from acutal processing vertex
-        for v, w in graph[u]:
-            if v != prev:
-                # descending edges condition
-                if w < weight:
-                    p_queue.put((tmp_dist+w, w, v, u))
-        # marking up to visited processed vertex
+        if processed[u] is False:
+            for v, w in graph[u]:
+                if v != prev:
+                    # descending edges condition
+                    if w < weight:
+                        p_queue.put((tmp_dist+w, w, v, u))
+             # marking up to visited processed vertex
+            processed[u] = True
+    # if total distance at the end will be equal inf -> that means cannot get the monotonic descening path to destination
     return total_distance
 
 
