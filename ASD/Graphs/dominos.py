@@ -3,9 +3,10 @@
 
 # complexity:
 # - time O(V+E)
-# - space O(V)
+# - space O(V^2) -> maximal num
 
 
+# creating undirected graph
 def create_graph(array, n):
     graph = [list() for _ in range(n)]
     for i in range(n-1):
@@ -15,6 +16,7 @@ def create_graph(array, n):
             # directed edge between dominos (while pushing i'th dominos, j'th domino will fall down too)
             if e == b:
                 graph[i].append(j)
+                graph[j].append(i)
     return graph
 
 
