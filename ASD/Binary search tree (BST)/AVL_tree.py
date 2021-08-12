@@ -3,6 +3,8 @@
 #  https://www.programiz.com/dsa/avl-tree
 
 
+# struckture has not a delete function
+
 class Node():
     def __init__(self, value=None, height=0, l_child=None, r_child=None):
         self.value = value
@@ -20,6 +22,8 @@ def LL_rotation(root, a):
     d, e = b.l_child, b.r_child
     b.l_child, b.r_child = d, a
     a.l_child, a.r_child = e, c
+    # updating height after rotations
+    update_height(a), update_height(b)
     if flag:
         return b
     else:
@@ -37,6 +41,7 @@ def LR_rotation(root, a):
     e.l_child, e.r_child = b, a
     b.l_child, b.r_child = d, f
     a.l_child, a.r_child = g, c
+    update_height(b), update_height(a), update_height(e)
     if flag:
         return e
     else:
@@ -52,6 +57,7 @@ def RR_rotation(root, a):
     d, e = c.l_child, c.r_child
     a.l_child, a.r_child = b, d
     c.l_child, c.r_child = a, e
+    update_height(a), update_height(c)
     if flag:
         return c
     else:
@@ -69,6 +75,7 @@ def RL_rotation(root, a):
     a.l_child, a.r_child = b, f
     c.l_child, c.r_child = g, e
     d.l_child, d.r_child = a, c
+    update_height(a), update_height(c), update_height(d)
     if flag:
         return d
     else:
@@ -105,8 +112,8 @@ def insert(root=None, node=None, value=None):
             node.r_child = Node(value)
         else:
             insert(root, node.r_child, value)
-    # updating height of every rec. parent
-    node.height = update_height(node)
+    # updating height of every bactracking level, and checking if is AVL tree
+    update_height(node)
     return balance(root, node)
 
 
@@ -118,11 +125,11 @@ def update_height(node):
         r_height *= (-1)
         r_height -= 1
     if l_height == abs(r_height):
-        return 0
+        node.height = 0
     elif l_height > abs(r_height):
-        return l_height-r_height
+        node.height = l_height-r_height
     else:
-        return r_height+l_height
+        node.height = r_height+l_height
 
 
 def get_height(node):
