@@ -1,9 +1,7 @@
 # Hierholzers algorithm to find Eulerian path
-# graph representation: directed graph on list adjacency
+# graph representation: undirected graph on list adjacency
 
 # inspiration: https://www.youtube.com/watch?v=8MpoO2zA2l4
-
-# graph has Eulerian path if in at most two vertices difference between in/out eges is equal 1
 
 from collections import deque
 # using deque as a stack to memorize path to append left in O(1)
@@ -49,7 +47,6 @@ def Eulerian_path(graph):
     n = len(graph)
     edges = [0]*n
     b, has_path = has_Eulerian_path(graph, edges, n)
-    # condition if graph has eulerian path
     if not has_path:
         return False
     path = deque()
