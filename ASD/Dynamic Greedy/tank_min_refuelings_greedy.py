@@ -23,10 +23,10 @@ from queue import PriorityQueue
 
 
 # complexity:
-# - time O(n*m)/(mlogm) ->  to sum up: (n*m + mlogm), n*m taking all fuel from plams, mlogm distances in greedy car refueling
+# - time O(n*m) or (mlogm) ->  to sum up: (n*m + mlogm), n*m taking all fuel from plams, mlogm distances in greedy car refueling
 # - space O(m)
 
-# rec alg. to get size of every plan
+# rec alg. to get size of every plam
 def rec_plan_size(T, row, col, n, m):
     steps = [(-1, 0), (0, 1), (1, 0), (0, -1)]
     plan_size = 0
@@ -59,27 +59,23 @@ def greedy_min_refuelings(T):
     m = len(T[0])
     # array, with capacity on every field in row 0
     refueling_capacity = calculate_refuel_capacity(T, n, m)
-    min_refuleings_list, min_refuleings = [], float("inf")
-    queue = PriorityQueue()
-    # need to take all fuel from plan on field 0
-    # tuples in queue: (total_distance, fuel_remaining,used stations number, used stations list)
-    begining_data = (0, refueling_capacity[0], 1, [0])
-    queue.put((begining_data))
-    while not queue.empty():
-        actual, fuel, refuelings, refuelings_list = queue.get()
-        # highest priority has lowest number, so in queue, distances are negative
-        actual = actual*(-1)
-        if actual+fuel >= m-1:
-            if min_refuleings > refuelings:
-                min_refuleings = refuelings
-                min_refuleings_list = refuelings_list
-        else:
-            for new_distance in range(actual+1, min(m, actual+fuel+1)):
-                fuel_remaining = fuel-(new_distance-actual)
-                if refueling_capacity[new_distance] > 0:
-                    queue.put((-1*new_distance, fuel_remaining + refueling_capacity[new_distance],
-                               refuelings+1, refuelings_list + [new_distance]))
-    return min_refuleings_list
+    # tuples in priority queue: (negative number of size in plam, station index)
+    p_queue = PriorityQueue()
+    # need to take all fuel from plam in the beginning
+    min_refuelings_list = [0]
+    dist_with_fuel = refueling_capacity[0]
+    dist = 0
+    while dist_with_fuel < m-1:
+        for dist in range(dist+1, dist_with_fuel+1):
+            p_queue.put((-1*refueling_capacity[dist], dist))
+        # isn't enought fuel to get into destination
+        if p_queue.empty():
+            return []
+        plam_fuel, idx = p_queue.get()
+        plam_fuel *= -1
+        dist_with_fuel += plam_fuel
+        min_refuelings_list.append(idx)
+    return list(sorted(min_refuelings_list))
 
 
 T = [
@@ -89,6 +85,5 @@ T = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
-
 
 print(greedy_min_refuelings(T))
