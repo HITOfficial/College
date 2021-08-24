@@ -1,7 +1,7 @@
 # interval tree, common sequence if has at lest endings the same
 
-# simple interval tree structure on bfs tree
-
+# simple interval tree structure on  balanced bfs tree
+# returning common intervals arrays, for every interval
 
 # complexity:
 # - time O(NlogN) / O(H-L), where H is the highest number in range array, and L lowest
@@ -73,6 +73,8 @@ def BBST_sorted_ranges_array(array):
 def add_interval(node, l, r):
     flag = False
     if node is not None:
+        if r < node.min or l > node.max:
+            return False
         flag1 = add_interval(node.left, l, r)
         flag2 = add_interval(node.right, l, r)
         flag = flag1 or flag2
@@ -133,13 +135,48 @@ def interval_tree(array):
     return root
 
 
+def common_interval(node, l, r):
+    intervals = []
+    if node is not None:
+        if r < node.min or l > node.max:
+            return []
+        left_intervals = common_interval(node.left, l, r)
+        right_intervals = common_interval(node.right, l, r)
+        if node.left is None and node.right is None:
+            intervals = node.intervals
+        intervals += left_intervals + right_intervals
+    return intervals
+
+
+def remove_duplicates(array):
+    # duplicate array
+    n = len(array)
+    duplicate = [False]*len(array)
+    for i in range(n-1):
+        for j in range(i+1, n):
+            if array[j] == array[i]:
+                duplicate[j] = True
+    unique = [array[i] for i in range(n) if not duplicate[i]]
+    return unique
+
+
 def common_intervals(array):
     # creating interval tree structure
     tree = interval_tree(array)
-    return tree
+    intervals = []
+    for l, r in array:
+        intervals.append(common_interval(tree, l, r))
+    unique_intervals = []
+    for i, intervals_array in enumerate(intervals):
+        # removing all duplicates in O(K^2), where k is an number of intervals with duplicates
+        unique_intervals.append(remove_duplicates(intervals_array))
+        unique_intervals[i].remove(array[i])
+        # removing element for whose alg. found common intervals
+    return unique_intervals
 
 
 array = [(15, 20), (5, 20), (17, 19), (12, 15), (30, 40)]
 array = [(0, 10), (5, 20), (7, 12), (10, 15), (15, 20)]
+
 
 print(common_intervals(array))
