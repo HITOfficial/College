@@ -25,7 +25,7 @@ def Floyd_Warshall(graph):
     for k in range(n):
         for u in range(n):
             for v in range(n):
-                if graph[k][v] != 0 and distances[u][v] > distances[u][k] + distances[k][v]:
+                if distances[u][v] > distances[u][k] + distances[k][v]:
                     distances[u][v] = distances[u][k] + distances[k][v]
                     paths[u][v] = paths[k][v]
 
