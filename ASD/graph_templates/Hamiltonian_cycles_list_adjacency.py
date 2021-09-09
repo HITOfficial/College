@@ -23,18 +23,19 @@ def conver_to_path(path, u):
     return p
 
 
-def rec_DFS_path(graph, paths, parent, visited, n, k, u, e):
-    # last vertex
-    if k == n-1 and u == e:
-        paths.append(list(reversed(conver_to_path(parent, e))))
-    else:
-        for v in graph[u]:
-            # vertex isn't in actual creating path
-            if visited[v] is False:
-                parent[v], visited[v] = u, True
-                rec_DFS_path(graph, paths, parent, visited, n, k+1, v, e)
-                # removing dynamic memorizing processing
-                parent[v], visited[v] = None, False
+def rec_DFS_paths(graph, paths, parent, visited, n, k, u, e):
+    for v in graph[u]:
+        # wasn't visited
+        if visited[v] is False:
+            parent[v], visited[v] = u, True
+            # isnt connection to last vertex
+            if k < n-2 and v != e:
+                rec_DFS_paths(graph, paths, parent, visited, n, k+1, v, e)
+            # connection to last vertex
+            elif k == n-2 and v == e:
+                paths.append(list(reversed(conver_to_path(parent, e))))
+            # removing dynamic memorizing processing
+            parent[v], visited[v] = None, False
 
 
 def Hamiltonian_paths(graph, b):
@@ -47,7 +48,7 @@ def Hamiltonian_paths(graph, b):
         in_v_idx = graph[v].index(b)
         # removing connections
         graph[b].pop(in_b_idx), graph[v].pop(in_v_idx)
-        rec_DFS_path(graph, paths, parent, visited, n, 0, b, v)
+        rec_DFS_paths(graph, paths, parent, visited, n, 0, b, v)
         # adding again connections
         graph[b].insert(in_b_idx, v), graph[v].insert(in_v_idx, b)
     # connections to beggining

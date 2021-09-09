@@ -13,25 +13,26 @@ def conver_to_path(path, u):
     return p
 
 
-def rec_DFS_path(graph, paths, parent, visited, n, k, u, e):
-    # last vertex
-    if k == n-1 and u == e:
-        paths.append(list(reversed(conver_to_path(parent, e))))
-    else:
-        for v in range(n):
-            # has edge
-            if graph[u][v] != 0 and visited[v] is False:
-                parent[v], visited[v] = u, True
-                rec_DFS_path(graph, paths, parent, visited, n, k+1, v, e)
-                # removing dynamic memorizing processing
-                parent[v], visited[v] = None, False
+def rec_DFS_paths(graph, paths, parent, visited, n, k, u, e):
+    for v in range(n):
+        # has edge
+        if graph[u][v] != 0 and visited[v] is False:
+            parent[v], visited[v] = u, True
+            # isnt connection to last vertex
+            if k < n-2 and v != e:
+                rec_DFS_paths(graph, paths, parent, visited, n, k+1, v, e)
+            # connection to last vertex
+            elif k == n-2 and v == e:
+                paths.append(list(reversed(conver_to_path(parent, e))))
+            # removing dynamic memorizing processing
+            parent[v], visited[v] = None, False
 
 
 def Hamiltonian_paths(graph, b, e):
     n = len(graph)
     paths, parent, visited = [], [None]*n, [False]*n
     visited[b] = True
-    rec_DFS_path(graph, paths, parent, visited, n, 0, b, e)
+    rec_DFS_paths(graph, paths, parent, visited, n, 0, b, e)
     return paths
 
 
