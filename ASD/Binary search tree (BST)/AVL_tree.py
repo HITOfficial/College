@@ -100,7 +100,7 @@ def insert(root=None, node=None, value=None):
     if root is node:
         if find(root, value):
             # this value is already in AVL tree
-            return Node
+            return node
     # finding place to insert element O(logN)
     if node.value > value:
         if node.l_child is None:
