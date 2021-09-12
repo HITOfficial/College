@@ -26,7 +26,6 @@ def BFS_path(graph, n, n2, b, e):
                 visited[v] = True
                 parent[v] = u
                 queue.put(v)
-    # found path
     return parent
 
 
@@ -43,16 +42,38 @@ def Floyd_Warshall(graph):
     return distances
 
 
+def edge_statement(M, distances, n, d, i, j):
+    # close to much, or moving using single edge/ two verices in the same point / replacing vertices
+    if distances[j//n][j % n] < d or j//n == j % n or i//n == i % n or (i//n == j % n and i % n == j//n):
+        return 0
+    # first car stay in place
+    elif i//n == j//n and M[i % n][j % n] > 0:
+        return 1
+    # second car stay in place
+    elif i % n == j % n and M[i//n][j//n] > 0:
+        return 1
+    # two cars changing position
+    elif M[i//n][j//n] > 0 and M[i % n][j % n] > 0:
+        return 1
+    else:
+        return 0
+
+
 def keep_distance(M, x, y, d):
     distances = Floyd_Warshall(M)
     # creating V^2 vertices, constructing graph and than running BFS to find path
     n = len(M)
     n2 = n**2
+    # 1st type of constructing graph
     graph = [[0 if (M[i//n][j//n] == 0 and i//n != j//n) or (M[i % n][j % n] == 0 and i % n != j % n) or (j//n == i % n and j % n == i//n) or j//n == j % n or i//n ==
               i % n else 1 if distances[j//n][j % n] >= d else 0 for j in range(n**2)] for i in range(n**2)]
+    # second type
+    graph2 = [[edge_statement(M, distances, n, d, i, j)
+               for j in range(n2)] for i in range(n2)]
 
     path = BFS_path(graph, n, n2, x, y)
-    return list(reversed(get_path(path, y*n+x, n)))
+    path2 = BFS_path(graph2, n, n2, x, y)
+    return list(reversed(get_path(path, y*n+x, n))), list(reversed(get_path(path2, y*n+x, n)))
 
 
 M1 = [
